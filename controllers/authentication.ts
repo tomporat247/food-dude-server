@@ -1,13 +1,38 @@
-import { Request, Response } from 'express';
+import * as objectHash from 'object-hash';
+import { Response } from 'express';
+import { RequestWithSession } from '../types/request-with-session';
+import { omit } from 'lodash';
+import { User } from '../models/user';
 
-export const signIn = (req: Request<any, any, { username: string; password: string }>, res: Response) => {
-  const { username, password } = req.body;
-  console.log({ username, password });
-  res.sendStatus(200);
+const getUserWithoutPrivateData = (user: User) => omit(user, ['passwordHash'] as Array<keyof User>);
+
+export const signUp = (req: RequestWithSession<{ email: string; password: string }>, res: Response) => {
+  const { email, password } = req.body;
+  req.session.user = {
+    email,
+    passwordHash: objectHash(password),
+    firstName: '',
+    lastName: '',
+    location: { city: '', houseNumber: 0, street: '' }
+  };
+  // TODO: Save user to mongo
+  res.status(200).send(getUserWithoutPrivateData(req.session.user));
 };
 
-export const signUp = (req: Request<any, any, { username: string; password: string }>, res: Response) => {
-  const { username, password } = req.body;
-  console.log({ username, password });
+export const signIn = (req: RequestWithSession<{ email: string; password: string }>, res: Response) => {
+  const { email, password } = req.body;
+  // TODO: Get user from mongo
+  req.session.user = {
+    email,
+    passwordHash: objectHash(password),
+    firstName: '',
+    lastName: '',
+    location: { city: '', houseNumber: 0, street: '' }
+  };
+  res.status(200).send(getUserWithoutPrivateData(req.session.user));
+};
+
+export const signOut = (req: RequestWithSession, res: Response) => {
+  delete req.session.user;
   res.sendStatus(200);
 };
