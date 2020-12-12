@@ -7,31 +7,24 @@ import '../config/init';
 import { app } from '../app';
 import * as http from 'http';
 import { get } from 'nconf';
-
-/**
- * Get port from environment and store in Express.
- */
+import { connectToDB } from '../utils/db/connect';
 
 const port = normalizePort(get('port') || process.env.PORT || '3000');
-app.set('port', port);
+let server: http.Server;
 
-/**
- * Create HTTP server.
- */
+const runServer = async () => {
+  app.set('port', port);
 
-const server = http.createServer(app);
+  server = http.createServer(app);
 
-/**
- * Listen on provided port, on all network interfaces.
- */
+  server.listen(port);
+  server.on('error', onError);
+  server.on('listening', onListening);
 
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+  await connectToDB();
+};
 
-/**
- * Normalize a port into a number, string, or false.
- */
+runServer();
 
 function normalizePort(val) {
   const port = parseInt(val, 10);
@@ -48,10 +41,6 @@ function normalizePort(val) {
 
   return false;
 }
-
-/**
- * Event listener for HTTP server "error" event.
- */
 
 function onError(error) {
   if (error.syscall !== 'listen') {
