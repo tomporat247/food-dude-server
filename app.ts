@@ -3,6 +3,7 @@ import { router } from './routes';
 import { json } from 'body-parser';
 import * as session from 'express-session';
 import { authenticationMiddleWare } from './middlewares/authentication';
+import { errorMiddleware } from './middlewares/error';
 
 export const app = express();
 
@@ -17,3 +18,4 @@ app.use(
 
 app.use(authenticationMiddleWare);
 app.use('/', router);
+app.use(errorMiddleware);
