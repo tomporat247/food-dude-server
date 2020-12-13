@@ -9,3 +9,10 @@ export const authenticationMiddleWare = (req: RequestWithSession, res: Response,
   }
   next();
 };
+
+export const isAdminMiddleWare = (req: RequestWithSession, res: Response, next: NextFunction) => {
+  if (req.session?.user?.role !== 'admin') {
+    res.status(401).send('permission error - user role must be admin');
+  }
+  next();
+};
