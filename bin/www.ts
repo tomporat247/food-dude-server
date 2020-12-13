@@ -15,13 +15,12 @@ let server: http.Server;
 const runServer = async () => {
   app.set('port', port);
 
-  server = http.createServer(app);
+  await connectToDB();
 
+  server = http.createServer(app);
   server.listen(port);
   server.on('error', onError);
   server.on('listening', onListening);
-
-  await connectToDB();
 };
 
 runServer();
