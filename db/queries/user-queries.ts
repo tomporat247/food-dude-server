@@ -1,6 +1,7 @@
 import { User } from '../../models/user';
 import { UserModel } from '../schemas/user-schema';
 
-export const createUser = (user: User): Promise<User> => UserModel.create(user);
+export const createUser = (user: User) => UserModel.create(user);
 
-export const findUserById = (id: string) => UserModel.findById(id);
+export const findUserByEmailAndPassword = (email: string, passwordHash: string) =>
+  UserModel.findOne({ email, passwordHash });

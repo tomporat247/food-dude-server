@@ -2,38 +2,40 @@ import * as objectHash from 'object-hash';
 import { NextFunction, Response } from 'express';
 import { RequestWithSession } from '../types/request-with-session';
 import { omit } from 'lodash';
-import { SignInUserArguments, SignUpUserArguments, User } from '../models/user';
-import { createUser } from '../db/queries/user-queries';
+import { SignInUserArguments, SignUpUserArguments, UserDocument } from '../models/user';
+import { createUser, findUserByEmailAndPassword } from '../db/queries/user-queries';
 import { FoodDudeError } from '../models/food-dude-error';
 
-const getUserWithoutPrivateData = (user: User) => omit(user, ['passwordHash'] as Array<keyof User>);
+const getUserWithoutPrivateData = (user: UserDocument) => omit(user.toObject(), ['passwordHash', '_id']);
 
 export const signUp = async (req: RequestWithSession<SignUpUserArguments>, res: Response, next: NextFunction) => {
   const { password, ...userData } = req.body;
-  req.session.user = {
+  const user = {
     ...userData,
     passwordHash: objectHash(password)
   };
 
   try {
-    await createUser(req.session.user);
+    req.session.user = await createUser(user);
     res.send(getUserWithoutPrivateData(req.session.user));
   } catch (e) {
     next(e.code === 11000 ? new FoodDudeError(`"${req.body.email}" email is taken by another user`, e) : e);
   }
 };
 
-export const signIn = (req: RequestWithSession<SignInUserArguments>, res: Response) => {
+export const signIn = async (req: RequestWithSession<SignInUserArguments>, res: Response, next: NextFunction) => {
   const { email, password } = req.body;
-  // TODO: Get user from mongo
-  req.session.user = {
-    email,
-    passwordHash: objectHash(password),
-    firstName: '',
-    lastName: '',
-    address: { city: '', houseNumber: 0, street: '' }
-  };
-  res.status(200).send(getUserWithoutPrivateData(req.session.user));
+
+  try {
+    req.session.user = await findUserByEmailAndPassword(email, objectHash(password));
+    if (req.session.user === null) {
+      next(new FoodDudeError('no match for user with given credentials', 'no match for user with given credentials'));
+    } else {
+      res.send(getUserWithoutPrivateData(req.session.user));
+    }
+  } catch (e) {
+    next(e);
+  }
 };
 
 export const signOut = (req: RequestWithSession, res: Response) => {

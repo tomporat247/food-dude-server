@@ -1,9 +1,9 @@
 import { Request } from 'express';
 import { Session } from 'express-session';
-import { User } from '../models/user';
+import { UserDocument } from '../models/user';
 
 interface FoodDudeSession {
-  user: User;
+  user: UserDocument;
 }
 
 export type RequestWithSession<T = any> = Request<any, any, T> & {
