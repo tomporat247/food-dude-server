@@ -5,6 +5,7 @@ export interface User {
   firstName: string;
   lastName: string;
   passwordHash: string;
+  role: 'admin' | 'viewer';
   address: {
     city: string;
     street: string;
@@ -14,7 +15,7 @@ export interface User {
 
 export interface UserDocument extends User, Document {}
 
-export type SignUpUserArguments = Omit<User, 'passwordHash'> & {
+export type SignUpUserArguments = Omit<Omit<User, 'passwordHash'>, 'role'> & {
   password: string;
 };
 export type SignInUserArguments = Omit<Omit<Omit<SignUpUserArguments, 'address'>, 'firstName'>, 'lastName'>;

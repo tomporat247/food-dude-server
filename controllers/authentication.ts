@@ -2,7 +2,7 @@ import * as objectHash from 'object-hash';
 import { NextFunction, Response } from 'express';
 import { RequestWithSession } from '../types/request-with-session';
 import { omit } from 'lodash';
-import { SignInUserArguments, SignUpUserArguments, UserDocument } from '../models/user';
+import { SignInUserArguments, SignUpUserArguments, User, UserDocument } from '../models/user';
 import { createUser, findUserByEmailAndPassword } from '../db/queries/user-queries';
 import { FoodDudeError } from '../models/food-dude-error';
 
@@ -10,10 +10,7 @@ const getUserWithoutPrivateData = (user: UserDocument) => omit(user.toObject(), 
 
 export const signUp = async (req: RequestWithSession<SignUpUserArguments>, res: Response, next: NextFunction) => {
   const { password, ...userData } = req.body;
-  const user = {
-    ...userData,
-    passwordHash: objectHash(password)
-  };
+  const user: User = { ...userData, role: 'viewer', passwordHash: objectHash(password) };
 
   try {
     req.session.user = await createUser(user);

@@ -7,6 +7,7 @@ const userSchema: Schema<User> = new Schema(
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
     passwordHash: { type: String, required: true },
+    role: { type: String, required: true },
     address: {
       type: {
         city: { type: String, required: true },
