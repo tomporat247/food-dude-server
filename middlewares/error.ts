@@ -7,5 +7,5 @@ export const errorMiddleware = (error: Error | FoodDudeError, req: Request, res:
   const errorMessage = isFoodDudeError(error) ? error.message : 'Internal Server Error';
   console.log(`error: ${JSON.stringify(error)}`);
 
-  return res.status(500).send(errorMessage);
+  return res.status(isFoodDudeError(error) ? error.status : 500).send(errorMessage);
 };

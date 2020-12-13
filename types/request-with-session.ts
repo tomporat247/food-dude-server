@@ -6,7 +6,7 @@ interface FoodDudeSession {
   user: UserDocument;
 }
 
-export type RequestWithSession<T = any> = Request<any, any, T> & {
+export type RequestWithSession<ReqBody = any, Params = any> = Request<Params, any, ReqBody> & {
   session: Session & FoodDudeSession;
   sessionID: string;
 };
