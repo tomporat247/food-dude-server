@@ -1,3 +1,5 @@
+import { Document } from 'mongoose';
+
 export interface User {
   email: string;
   firstName: string;
@@ -9,6 +11,8 @@ export interface User {
     houseNumber: number;
   };
 }
+
+export interface UserDocument extends User, Document {}
 
 export type SignUpUserArguments = Omit<User, 'passwordHash'> & {
   password: string;

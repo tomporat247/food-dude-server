@@ -7,7 +7,7 @@ import '../config/init';
 import { app } from '../app';
 import * as http from 'http';
 import { get } from 'nconf';
-import { connectToDB } from '../utils/db/connect';
+import { connectToDB } from '../db/connect';
 
 const port = normalizePort(get('port') || process.env.PORT || '3000');
 let server: http.Server;
