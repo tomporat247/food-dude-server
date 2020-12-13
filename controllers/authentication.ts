@@ -34,6 +34,6 @@ export const signIn = async (req: RequestWithSession<SignInUserArguments>, res: 
 };
 
 export const signOut = (req: RequestWithSession, res: Response) => {
-  delete req.session.user;
+  req.session.user = null;
   res.sendStatus(200);
 };
