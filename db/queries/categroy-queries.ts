@@ -1,6 +1,8 @@
 import { Category } from '../../models/category';
 import { CategoryModel } from '../schemas/category';
 
+export const getAllCategories = () => CategoryModel.find();
+
 export const createCategory = (category: Category) => CategoryModel.create(category);
 
 export const removeCategoryByName = (name: string) => CategoryModel.findOneAndDelete({ name });

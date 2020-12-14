@@ -1,12 +1,26 @@
 import { RequestWithSession } from '../types/request-with-session';
 import { NextFunction, Response } from 'express';
-import { createCategory, removeCategoryByName, updateCategoryByName } from '../db/queries/categroy-queries';
+import {
+  createCategory,
+  getAllCategories,
+  removeCategoryByName,
+  updateCategoryByName
+} from '../db/queries/categroy-queries';
 import { FoodDudeError } from '../models/food-dude-error';
 import { getDocumentWithoutIrrelevantFields } from '../utils/common-utils';
 import { Category, CategoryDocument } from '../models/category';
 
 const getCategoryWithoutId = (categoryDocument: CategoryDocument) =>
   getDocumentWithoutIrrelevantFields(categoryDocument, ['_id']);
+
+export const getCategories = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const categories = await getAllCategories();
+    res.send(categories.map(getCategoryWithoutId));
+  } catch (e) {
+    next(e);
+  }
+};
 
 export const createNewCategory = async (req: RequestWithSession<Category, any>, res: Response, next: NextFunction) => {
   try {
