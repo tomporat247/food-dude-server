@@ -1,5 +1,5 @@
 import { Category } from '../../models/category';
-import { CategoryModel } from '../schemas/category';
+import { CategoryModel } from '../schemas/category-schema';
 
 export const getAllCategories = () => CategoryModel.find();
 
