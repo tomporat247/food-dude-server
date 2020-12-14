@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { isAdminMiddleWare, isAdminOrCurrentUserMiddleware } from '../middlewares/authentication';
-import { removeUser, updateUser } from '../controllers/users';
-import { validateEmailParameter, validateUserUpdateBody } from '../middlewares/validators/users-validator';
+import { removeUser, updateUser } from '../controllers/user';
+import { validateEmailParameter, validateUserUpdateBody } from '../middlewares/validators/user-validator';
 
 export const userRouter = Router();
 

@@ -3,7 +3,7 @@ import { NextFunction, Response } from 'express';
 import { findAndUpdateUser, findUserByEmail } from '../db/queries/user-queries';
 import { FoodDudeError } from '../models/food-dude-error';
 import { getUserWithoutPrivateData } from '../utils/user-utils';
-import { UpdateUserArguments, User } from '../models/user';
+import { UpdateUserArguments } from '../models/user';
 
 export const removeUser = async (
   req: RequestWithSession<any, { email: string }>,
@@ -34,7 +34,9 @@ export const updateUser = async (
   try {
     const updatedUser = await findAndUpdateUser(req.params.email, req.body);
 
-    if (req.session.user._id.toString() === updatedUser._id.toString()) {
+    if (updatedUser === null) {
+      next(new FoodDudeError(`could not find user with email: "${req.params.email}"`, 400));
+    } else if (req.session.user._id.toString() === updatedUser._id.toString()) {
       req.session.user = updatedUser;
     }
     res.send(getUserWithoutPrivateData(updatedUser));
