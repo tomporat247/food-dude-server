@@ -5,9 +5,18 @@ import { object, string } from 'joi';
 import { Category } from '../../models/category';
 
 const categorySchema = object({
-  name: string().optional(),
-  description: string().optional()
+  name: string(),
+  description: string()
 });
+
+export const validateCreateCategoryBody = (
+  req: RequestWithSession<Category, { name: string }>,
+  res: Response,
+  next: NextFunction
+) => {
+  validateSchema(categorySchema, req.body, 'required');
+  next();
+};
 
 export const validateCategoryUpdateBody = (
   req: RequestWithSession<Partial<Category>, { name: string }>,
@@ -15,14 +24,5 @@ export const validateCategoryUpdateBody = (
   next: NextFunction
 ) => {
   validateSchema(categorySchema, req.body, 'optional');
-  next();
-};
-
-export const validateCreateCategoryBody = (
-  req: RequestWithSession<Partial<Category>, { name: string }>,
-  res: Response,
-  next: NextFunction
-) => {
-  validateSchema(categorySchema, req.body, 'required');
   next();
 };
