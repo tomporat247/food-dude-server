@@ -1,15 +1,14 @@
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 import { Address } from '../types/address';
-import { Review } from './review';
 
 export interface Restaurant {
   _id?: any;
   name: string;
-  categoryId: string;
   description: string;
   rating: number;
   address: Address;
-  reviews: Review[];
+  categoryRef: Types.ObjectId;
+  reviewRefs: Types.ObjectId[];
 }
 
 export interface RestaurantDocument extends Restaurant, Document {}

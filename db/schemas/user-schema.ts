@@ -1,5 +1,6 @@
-import { Schema, Model, model } from 'mongoose';
+import { Model, model, Schema } from 'mongoose';
 import { User, UserDocument } from '../../models/user';
+import { addressSchemaType } from './common-schema-types';
 
 const userSchema: Schema<User> = new Schema(
   {
@@ -8,18 +9,7 @@ const userSchema: Schema<User> = new Schema(
     lastName: { type: String, required: true },
     passwordHash: { type: String, required: true },
     role: { type: String, required: true },
-    address: {
-      type: {
-        city: { type: String, required: true },
-        street: { type: String, required: true },
-        houseNumber: {
-          type: Number,
-          min: 1,
-          required: true
-        }
-      },
-      required: true
-    }
+    address: { type: addressSchemaType, required: true }
   },
   {
     versionKey: false

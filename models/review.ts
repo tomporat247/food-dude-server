@@ -1,11 +1,11 @@
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 
 export interface Review {
   _id?: any;
-  userId: string;
-  restaurantId: string;
+  userRef: string;
   content: string;
-  createdAt: string;
+  createdAt: Date;
+  restaurantRef: Types.ObjectId;
 }
 
 export interface ReviewDocument extends Review, Document {}
