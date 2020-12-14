@@ -1,16 +1,14 @@
 import { Document } from 'mongoose';
+import { Address } from '../types/address';
 
 export interface User {
+  _id?: any;
   email: string;
   firstName: string;
   lastName: string;
   passwordHash: string;
   role: 'admin' | 'viewer';
-  address: {
-    city: string;
-    street: string;
-    houseNumber: number;
-  };
+  address: Address;
 }
 
 export interface UserDocument extends User, Document {}
