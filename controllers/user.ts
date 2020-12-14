@@ -1,9 +1,18 @@
 import { RequestWithSession } from '../types/request-with-session';
 import { NextFunction, Response } from 'express';
-import { findAndUpdateUser, findUserByEmail } from '../db/queries/user-queries';
+import { findAndUpdateUser, findUserByEmail, getAllUsers } from '../db/queries/user-queries';
 import { FoodDudeError } from '../models/food-dude-error';
 import { getUserWithoutPrivateData } from '../utils/user-utils';
 import { UpdateUserArguments } from '../models/user';
+
+export const getUsers = async (req: RequestWithSession<any, { email: string }>, res: Response, next: NextFunction) => {
+  try {
+    const users = await getAllUsers();
+    res.send(users.map(getUserWithoutPrivateData));
+  } catch (e) {
+    next(e);
+  }
+};
 
 export const removeUser = async (
   req: RequestWithSession<any, { email: string }>,

@@ -1,6 +1,8 @@
 import { User } from '../../models/user';
 import { UserModel } from '../schemas/user-schema';
 
+export const getAllUsers = () => UserModel.find();
+
 export const createUser = (user: User) => UserModel.create(user);
 
 export const findUserByEmailAndPassword = (email: string, passwordHash: string) =>
