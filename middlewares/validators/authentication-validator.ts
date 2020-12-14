@@ -1,27 +1,19 @@
 import { NextFunction } from 'express';
-import { number, object, Schema, string } from 'joi';
+import { Schema, string } from 'joi';
 import { validateSchema } from './utils/validate-schema';
+import { emailSchema, userSchema } from './utils/common-validators';
 
-const userSignInSchema = object({ email: string().email().required(), password: string().min(6).required() });
-const userSignUpSchema = userSignInSchema.keys({
-  firstName: string().required(),
-  lastName: string().required(),
-  address: object({
-    city: string().required(),
-    street: string().required(),
-    houseNumber: number().positive().required()
-  }).required()
-});
+const userSignInSchema = emailSchema.keys({ password: string().min(6).required() });
 
-const validateAuthenticationParameters = (schema: Schema, req: Request, next: NextFunction) => {
-  validateSchema(schema, req.body);
+const validateAuthenticationBody = (schema: Schema, req: Request, next: NextFunction) => {
+  validateSchema(schema, req.body, 'required');
   next();
 };
 
-export const validateUserSignIn = (req: Request, res: Response, next: NextFunction) => {
-  validateAuthenticationParameters(userSignInSchema, req, next);
+export const validateUserSignInBody = (req: Request, res: Response, next: NextFunction) => {
+  validateAuthenticationBody(userSignInSchema, req, next);
 };
 
-export const validateUserSignUp = (req: Request, res: Response, next: NextFunction) => {
-  validateAuthenticationParameters(userSignUpSchema, req, next);
+export const validateUserSignUpBody = (req: Request, res: Response, next: NextFunction) => {
+  validateAuthenticationBody(userSchema, req, next);
 };

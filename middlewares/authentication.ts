@@ -1,10 +1,9 @@
 import { RequestWithSession } from '../types/request-with-session';
 import { NextFunction, Response } from 'express';
 import { FoodDudeError } from '../models/food-dude-error';
+import { isCurrentUserAdmin } from '../utils/user-utils';
 
 const routesToIgnore = new Set(['/authentication/sign-in', '/authentication/sign-up']);
-
-const isCurrentUserAdmin = (req: RequestWithSession) => req.session.user?.role === 'admin';
 
 export const authenticationMiddleWare = (req: RequestWithSession, res: Response, next: NextFunction) => {
   if (!routesToIgnore.has(req.url) && !req.session.user) {
