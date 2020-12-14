@@ -8,24 +8,6 @@ import { Category, CategoryDocument } from '../models/category';
 const getCategoryWithoutId = (categoryDocument: CategoryDocument) =>
   getDocumentWithoutIrrelevantFields(categoryDocument, ['_id']);
 
-export const removeCategory = async (
-  req: RequestWithSession<any, { name: string }>,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const deletedCategory = await removeCategoryByName(req.params.name);
-
-    if (deletedCategory === null) {
-      next(new FoodDudeError(`could not find category with name: "${req.params.name}"`, 400));
-    } else {
-      res.send(getCategoryWithoutId(deletedCategory));
-    }
-  } catch (e) {
-    next(e);
-  }
-};
-
 export const createNewCategory = async (req: RequestWithSession<Category, any>, res: Response, next: NextFunction) => {
   try {
     const newCategory = await createCategory(req.body);
@@ -46,6 +28,24 @@ export const updateCategory = async (
       next(new FoodDudeError(`could not find category with name: "${req.params.name}"`, 400));
     } else {
       res.send(getCategoryWithoutId(updatedCategory));
+    }
+  } catch (e) {
+    next(e);
+  }
+};
+
+export const removeCategory = async (
+  req: RequestWithSession<any, { name: string }>,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const deletedCategory = await removeCategoryByName(req.params.name);
+
+    if (deletedCategory === null) {
+      next(new FoodDudeError(`could not find category with name: "${req.params.name}"`, 400));
+    } else {
+      res.send(getCategoryWithoutId(deletedCategory));
     }
   } catch (e) {
     next(e);
