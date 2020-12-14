@@ -3,8 +3,8 @@ import { NextFunction, Response } from 'express';
 import {
   createCategory,
   findAllCategories,
-  removeCategoryByName,
-  updateCategoryByName
+  removeCategoryById,
+  updateCategoryById
 } from '../db/queries/categroy-queries';
 import { FoodDudeError } from '../models/food-dude-error';
 import { Category } from '../models/category';
@@ -28,14 +28,14 @@ export const createNewCategory = async (req: RequestWithSession<Category, any>, 
 };
 
 export const updateCategory = async (
-  req: RequestWithSession<Category, { name: string }>,
+  req: RequestWithSession<Category, { id: string }>,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const updatedCategory = await updateCategoryByName(req.params.name, req.body);
+    const updatedCategory = await updateCategoryById(req.params.id, req.body);
     if (updatedCategory === null) {
-      next(new FoodDudeError(`could not find category with name: "${req.params.name}"`, 400));
+      next(new FoodDudeError(`could not find category with id: "${req.params.id}"`, 400));
     } else {
       res.send(updatedCategory);
     }
@@ -44,16 +44,17 @@ export const updateCategory = async (
   }
 };
 
+// TODO: Do not allow removing categories that have restaurants
 export const removeCategory = async (
-  req: RequestWithSession<any, { name: string }>,
+  req: RequestWithSession<any, { id: string }>,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const deletedCategory = await removeCategoryByName(req.params.name);
+    const deletedCategory = await removeCategoryById(req.params.id);
 
     if (deletedCategory === null) {
-      next(new FoodDudeError(`could not find category with name: "${req.params.name}"`, 400));
+      next(new FoodDudeError(`could not find category with name: "${req.params.id}"`, 400));
     } else {
       res.send(deletedCategory);
     }

@@ -7,7 +7,7 @@ export const findCategoryById = (id: string) => CategoryModel.findById(id);
 
 export const createCategory = (category: Category) => CategoryModel.create(category);
 
-export const removeCategoryByName = (name: string) => CategoryModel.findOneAndDelete({ name });
+export const removeCategoryById = (id: string) => CategoryModel.findByIdAndDelete(id);
 
-export const updateCategoryByName = (name: string, update: Partial<Category>) =>
-  CategoryModel.findOneAndUpdate({ name }, { $set: update }, { new: true });
+export const updateCategoryById = (id: string, update: Partial<Category>) =>
+  CategoryModel.findByIdAndUpdate(id, { $set: update }, { new: true });
