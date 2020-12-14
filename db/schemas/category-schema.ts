@@ -11,4 +11,4 @@ const categorySchema: Schema<Category> = new Schema(
   }
 );
 
-export const CategoryModel: Model<CategoryDocument> = model<CategoryDocument>('categories', categorySchema);
+export const CategoryModel: Model<CategoryDocument> = model<CategoryDocument>('Category', categorySchema);

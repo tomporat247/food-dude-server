@@ -8,12 +8,13 @@ const restaurantSchema: Schema<Restaurant> = new Schema(
     description: { type: String, required: true },
     rating: { type: Number, required: true },
     address: { type: addressSchemaType, required: true },
-    categoryRef: { type: Schema.Types.ObjectId, required: true },
-    reviewRefs: { type: [Schema.Types.ObjectId], required: true }
+    imageUrl: { type: String, required: true },
+    category: { type: Schema.Types.ObjectId, ref: 'Category', required: true },
+    reviews: { type: [Schema.Types.ObjectId], ref: 'Review', required: true }
   },
   {
     versionKey: false
   }
 );
 
-export const RestaurantModel: Model<RestaurantDocument> = model<RestaurantDocument>('restaurants', restaurantSchema);
+export const RestaurantModel: Model<RestaurantDocument> = model<RestaurantDocument>('Restaurant', restaurantSchema);

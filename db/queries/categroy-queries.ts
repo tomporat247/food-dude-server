@@ -1,7 +1,9 @@
 import { Category } from '../../models/category';
 import { CategoryModel } from '../schemas/category-schema';
 
-export const getAllCategories = () => CategoryModel.find();
+export const findAllCategories = () => CategoryModel.find();
+
+export const findCategoryById = (id: string) => CategoryModel.findById(id);
 
 export const createCategory = (category: Category) => CategoryModel.create(category);
 

@@ -2,21 +2,17 @@ import { RequestWithSession } from '../types/request-with-session';
 import { NextFunction, Response } from 'express';
 import {
   createCategory,
-  getAllCategories,
+  findAllCategories,
   removeCategoryByName,
   updateCategoryByName
 } from '../db/queries/categroy-queries';
 import { FoodDudeError } from '../models/food-dude-error';
-import { getDocumentWithoutIrrelevantFields } from '../utils/common-utils';
-import { Category, CategoryDocument } from '../models/category';
-
-const getCategoryWithoutId = (categoryDocument: CategoryDocument) =>
-  getDocumentWithoutIrrelevantFields(categoryDocument, ['_id']);
+import { Category } from '../models/category';
 
 export const getCategories = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const categories = await getAllCategories();
-    res.send(categories.map(getCategoryWithoutId));
+    const categories = await findAllCategories();
+    res.send(categories);
   } catch (e) {
     next(e);
   }
@@ -25,7 +21,7 @@ export const getCategories = async (req: Request, res: Response, next: NextFunct
 export const createNewCategory = async (req: RequestWithSession<Category, any>, res: Response, next: NextFunction) => {
   try {
     const newCategory = await createCategory(req.body);
-    res.send(getCategoryWithoutId(newCategory));
+    res.send(newCategory);
   } catch (e) {
     next(e);
   }
@@ -41,7 +37,7 @@ export const updateCategory = async (
     if (updatedCategory === null) {
       next(new FoodDudeError(`could not find category with name: "${req.params.name}"`, 400));
     } else {
-      res.send(getCategoryWithoutId(updatedCategory));
+      res.send(updatedCategory);
     }
   } catch (e) {
     next(e);
@@ -59,7 +55,7 @@ export const removeCategory = async (
     if (deletedCategory === null) {
       next(new FoodDudeError(`could not find category with name: "${req.params.name}"`, 400));
     } else {
-      res.send(getCategoryWithoutId(deletedCategory));
+      res.send(deletedCategory);
     }
   } catch (e) {
     next(e);

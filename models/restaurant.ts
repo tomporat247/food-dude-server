@@ -1,5 +1,7 @@
 import { Document, Types } from 'mongoose';
 import { Address } from '../types/address';
+import { Category } from './category';
+import { Review } from './review';
 
 export interface Restaurant {
   _id?: any;
@@ -7,8 +9,11 @@ export interface Restaurant {
   description: string;
   rating: number;
   address: Address;
-  categoryRef: Types.ObjectId;
-  reviewRefs: Types.ObjectId[];
+  imageUrl: string;
+  category: Types.ObjectId | Category | string;
+  reviews: Types.ObjectId[] | Review[];
 }
+
+export type CreateRestaurantBody = Omit<Omit<Restaurant, '_id'>, 'reviews'>;
 
 export interface RestaurantDocument extends Restaurant, Document {}
