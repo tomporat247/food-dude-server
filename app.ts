@@ -16,6 +16,6 @@ app.use(
   })
 );
 
-app.use(authenticationMiddleWare);
+// app.use(authenticationMiddleWare);
 app.use('/', router);
 app.use(errorMiddleware);
