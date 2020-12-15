@@ -27,4 +27,4 @@ const specs = swaggerJsdoc({
 export const apiDocsRouter = Router();
 
 // @ts-ignore
-apiDocsRouter.use('/', serve, setup(specs));
+apiDocsRouter.use('/', serve, setup(specs, { explorer: true }));
