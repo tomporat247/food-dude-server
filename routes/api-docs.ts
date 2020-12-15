@@ -21,7 +21,7 @@ const specs = swaggerJsdoc({
         ]
       : undefined
   },
-  apis: ['./*.*']
+  apis: ['./routes/**.**', './models/**.**']
 });
 
 export const apiDocsRouter = Router();
