@@ -7,10 +7,10 @@ import { FoodDudeError } from '../models/food-dude-error';
 import { getUserWithoutPrivateData } from '../utils/user-utils';
 
 export const signUp = async (req: RequestWithSession<SignUpUserArguments>, res: Response, next: NextFunction) => {
-  const { password, ...userData } = req.body;
-  const user: User = { ...userData, role: 'viewer', passwordHash: objectHash(password) };
-
   try {
+    const { password, ...userData } = req.body;
+    const user: User = { ...userData, role: 'viewer', passwordHash: objectHash(password) };
+
     req.session.user = await createUser(user);
     res.send(getUserWithoutPrivateData(req.session.user));
   } catch (e) {
@@ -19,9 +19,8 @@ export const signUp = async (req: RequestWithSession<SignUpUserArguments>, res: 
 };
 
 export const signIn = async (req: RequestWithSession<SignInUserArguments>, res: Response, next: NextFunction) => {
-  const { email, password } = req.body;
-
   try {
+    const { email, password } = req.body;
     req.session.user = await findUserByEmailAndPassword(email, objectHash(password));
     if (req.session.user === null) {
       next(new FoodDudeError('no match for user with given credentials', 404));

@@ -1,5 +1,5 @@
 import { RestaurantModel } from '../schemas/restaurant-schema';
-import {Restaurant} from "../../models/restaurant";
+import { Restaurant } from '../../models/restaurant';
 
 export const findAllRestaurants = ({
   populateReviews,
@@ -19,3 +19,8 @@ export const findAllRestaurants = ({
 };
 
 export const createRestaurant = (restaurant: Restaurant) => RestaurantModel.create(restaurant);
+
+export const updateRestaurantById = (id: string, update: Partial<Restaurant>) =>
+  RestaurantModel.findByIdAndUpdate(id, { $set: update }, { new: true });
+
+export const removeRestaurantById = (id: string) => RestaurantModel.findByIdAndRemove(id);

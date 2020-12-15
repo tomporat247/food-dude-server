@@ -19,7 +19,7 @@ export const removeUser = async (req: RequestWithSession<any, { id: string }>, r
     const userToDelete = await findUserById(req.params.id);
 
     if (userToDelete === null) {
-      next(new FoodDudeError(`could not find user with id: "${req.params.id}"`, 400));
+      next(new FoodDudeError(`could not find user with id: "${req.params.id}"`, 404));
     } else if (userToDelete._id.toString() === req.session.user._id.toString()) {
       next(new FoodDudeError('cannot remove own user', 400));
     } else {
@@ -40,7 +40,7 @@ export const updateUser = async (
     const updatedUser = await findAndUpdateUser(req.params.id, req.body);
 
     if (updatedUser === null) {
-      next(new FoodDudeError(`could not find user with id: "${req.params.id}"`, 400));
+      next(new FoodDudeError(`could not find user with id: "${req.params.id}"`, 404));
     } else if (req.session.user._id.toString() === updatedUser._id.toString()) {
       req.session.user = updatedUser;
     }

@@ -35,7 +35,7 @@ export const updateCategory = async (
   try {
     const updatedCategory = await updateCategoryById(req.params.id, req.body);
     if (updatedCategory === null) {
-      next(new FoodDudeError(`could not find category with id: "${req.params.id}"`, 400));
+      next(new FoodDudeError(`could not find category with id: "${req.params.id}"`, 404));
     } else {
       res.send(updatedCategory);
     }
@@ -54,7 +54,7 @@ export const removeCategory = async (
     const deletedCategory = await removeCategoryById(req.params.id);
 
     if (deletedCategory === null) {
-      next(new FoodDudeError(`could not find category with name: "${req.params.id}"`, 400));
+      next(new FoodDudeError(`could not find category with id: "${req.params.id}"`, 404));
     } else {
       res.send(deletedCategory);
     }

@@ -15,5 +15,6 @@ export interface Restaurant {
 }
 
 export type CreateRestaurantBody = Omit<Omit<Restaurant, '_id'>, 'reviews'>;
+export type UpdateRestaurantBody = Partial<CreateRestaurantBody>;
 
 export interface RestaurantDocument extends Restaurant, Document {}
