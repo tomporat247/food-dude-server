@@ -3,6 +3,7 @@ import { NextFunction, Response } from 'express';
 import {
   createCategory,
   findAllCategories,
+  findCategoryByName,
   removeCategoryById,
   updateCategoryById
 } from '../db/queries/categroy-queries';
@@ -20,8 +21,13 @@ export const getCategories = async (req: Request, res: Response, next: NextFunct
 
 export const createNewCategory = async (req: RequestWithSession<Category, any>, res: Response, next: NextFunction) => {
   try {
-    const newCategory = await createCategory(req.body);
-    res.send(newCategory);
+    const categoryWithMatchingName = await findCategoryByName(req.body.name);
+    if (categoryWithMatchingName) {
+      next(new FoodDudeError(`category with name ${req.body.name} already exists`, 400));
+    } else {
+      const newCategory = await createCategory(req.body);
+      res.send(newCategory);
+    }
   } catch (e) {
     next(e);
   }
