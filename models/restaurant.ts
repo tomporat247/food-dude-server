@@ -19,7 +19,6 @@ export type UpdateRestaurantBody = Partial<CreateRestaurantBody>;
 
 export interface RestaurantDocument extends Restaurant, Document {}
 
-// TODO: Add reviews
 /**
  * @swagger
  *  components:
@@ -61,6 +60,10 @@ export interface RestaurantDocument extends Restaurant, Document {}
  *            type: string
  *          category:
  *            $ref: '#/components/schemas/Category'
+ *          reviews:
+ *            type: array
+ *            items:
+ *              $ref: '#/components/schemas/Review'
  *        example:
  *           _id: "xxx"
  *           name: KFC
@@ -69,4 +72,5 @@ export interface RestaurantDocument extends Restaurant, Document {}
  *           imageUrl: http://some-link
  *           category: some category
  *           address: {city: 'Tel Aviv', street: 'Hashalom', houseNumber: 1}
+ *           reviews: [review 1, review 2]
  */
