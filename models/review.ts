@@ -34,7 +34,7 @@ export interface ReviewDocument extends Review, Document {}
  *            $ref: '#/components/schemas/Restaurant'
  *          content:
  *            type: string
- *          created:
+ *          createdAt:
  *            type: string
  *            format: date
  *        example:
