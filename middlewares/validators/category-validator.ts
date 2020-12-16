@@ -10,7 +10,7 @@ const categorySchema = object({
 });
 
 export const validateCreateCategoryBody = (
-  req: RequestWithSession<Category, { name: string }>,
+  req: RequestWithSession<Category>,
   res: Response,
   next: NextFunction
 ) => {

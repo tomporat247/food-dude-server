@@ -41,37 +41,567 @@
       }
     },
     "paths": {
-      "/users/login": {
+      "/authentication/sign-in": {
         "post": {
-          "summary": "Login user",
           "tags": ["Users"],
-          "description": "Login user in system",
           "parameters": [
             {
-              "name": "user",
+              "name": "email",
+              "required": true,
               "in": "body",
-              "description": "Login user",
               "schema": {
-                "$ref": "#/definitions/User"
+                "type": "string"
+              }
+            },
+            {
+              "name": "password",
+              "required": true,
+              "in": "body",
+              "schema": {
+                "type": "string"
               }
             }
           ],
           "produces": ["application/json"],
           "responses": {
             "200": {
-              "description": "Login Success",
+              "description": "sign in success",
               "schema": {
                 "$ref": "#/definitions/User"
               }
             },
-            "401": {
-              "description": "Login details are not valid!!"
+            "400": {
+              "description": "invalid login parameters"
             },
             "404": {
-              "description": "Email is not registered!"
+              "description": "user not found for given credentials"
+            }
+          }
+        }
+      },
+      "/authentication/sign-up": {
+        "post": {
+          "tags": ["Users"],
+          "parameters": [
+            {
+              "name": "email",
+              "required": true,
+              "in": "body",
+              "schema": {
+                "type": "string"
+              }
             },
-            "500": {
-              "description": "User login failed!!"
+            {
+              "name": "password",
+              "required": true,
+              "in": "body",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "produces": ["application/json"],
+          "responses": {
+            "200": {
+              "description": "sign up success",
+              "schema": {
+                "$ref": "#/definitions/User"
+              }
+            },
+            "400": {
+              "description": "invalid login parameters"
+            },
+            "403": {
+              "description": "email is taken by another user"
+            }
+          }
+        }
+      },
+      "/authentication/sign-out": {
+        "post": {
+          "tags": ["Users"],
+          "produces": ["application/json"],
+          "responses": {
+            "200": {
+              "description": "sign out success",
+              "schema": {
+                "$ref": "#/definitions/User"
+              }
+            }
+          }
+        }
+      },
+      "/users": {
+        "get": {
+          "tags": ["Users"],
+          "produces": ["application/json"],
+          "responses": {
+            "200": {
+              "description": "all users",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/User"
+                }
+              }
+            },
+            "401": {
+              "description": "only admin is permitted to this action"
+            }
+          }
+        }
+      },
+      "/users/current": {
+        "get": {
+          "tags": ["Users"],
+          "produces": ["application/json"],
+          "responses": {
+            "200": {
+              "description": "get current user",
+              "schema": {
+                "$ref": "#/definitions/User"
+              }
+            },
+            "404": {
+              "description": "you are not logged in"
+            }
+          }
+        }
+      },
+      "/users/{id}": {
+        "put": {
+          "tags": ["Users"],
+          "parameters": [
+            {
+              "name": "id",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "email",
+              "in": "body",
+              "schema": {
+                "type": "string",
+                "format": "email"
+              }
+            },
+            {
+              "name": "address",
+              "in": "body",
+              "schema": {
+                "type": "object"
+              }
+            },
+            {
+              "name": "firstName",
+              "in": "body",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "lastName",
+              "in": "body",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "password",
+              "in": "body",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "produces": ["application/json"],
+          "responses": {
+            "200": {
+              "description": "updated user",
+              "schema": {
+                "$ref": "#/definitions/User"
+              }
+            },
+            "400": {
+              "description": "invalid parameters"
+            },
+            "404": {
+              "description": "no user with given id exists"
+            }
+          }
+        },
+        "delete": {
+          "tags": ["Users"],
+          "parameters": [
+            {
+              "name": "id",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "produces": ["application/json"],
+          "responses": {
+            "200": {
+              "description": "deleted user",
+              "schema": {
+                "$ref": "#/definitions/User"
+              }
+            },
+            "400": {
+              "description": "invalid parameters"
+            },
+            "404": {
+              "description": "no user with given id exists"
+            }
+          }
+        }
+      },
+      "/categories": {
+        "get": {
+          "tags": ["Categories"],
+          "produces": ["application/json"],
+          "responses": {
+            "200": {
+              "description": "all categories",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/User"
+                }
+              }
+            }
+          }
+        },
+        "post": {
+          "tags": ["Categories"],
+          "parameters": [
+            {
+              "name": "name",
+              "required": true,
+              "in": "body",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "description",
+              "required": true,
+              "in": "body",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "produces": ["application/json"],
+          "responses": {
+            "200": {
+              "description": "newly created category",
+              "schema": {
+                "$ref": "#/definitions/Category"
+              }
+            },
+            "400": {
+              "description": "invalid parameters"
+            },
+            "401": {
+              "description": "only admin is permitted to this action"
+            },
+            "403": {
+              "description": "category with given name already exists"
+            }
+          }
+        }
+      },
+      "/categories/{id}": {
+        "put": {
+          "tags": ["Categories"],
+          "parameters": [
+            {
+              "name": "id",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "name",
+              "required": true,
+              "in": "body",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "description",
+              "required": true,
+              "in": "body",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "produces": ["application/json"],
+          "responses": {
+            "200": {
+              "description": "updated category",
+              "schema": {
+                "$ref": "#/definitions/Category"
+              }
+            },
+            "400": {
+              "description": "invalid parameters"
+            },
+            "401": {
+              "description": "only admin is permitted to this action"
+            },
+            "403": {
+              "description": "category with given name already exists"
+            }
+          }
+        },
+        "delete": {
+          "tags": ["Categories"],
+          "parameters": [
+            {
+              "name": "id",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "produces": ["application/json"],
+          "responses": {
+            "200": {
+              "description": "deleted category",
+              "schema": {
+                "$ref": "#/definitions/Category"
+              }
+            },
+            "400": {
+              "description": "invalid parameters"
+            },
+            "401": {
+              "description": "only admin is permitted to this action"
+            },
+            "404": {
+              "description": "category with given id does not exist"
+            }
+          }
+        }
+      },
+      "/restaurants": {
+        "get": {
+          "tags": ["Restaurants"],
+          "produces": ["application/json"],
+          "responses": {
+            "200": {
+              "description": "all restaurants without reviews",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/Restaurant"
+                }
+              }
+            }
+          }
+        },
+        "post": {
+          "tags": ["Restaurants"],
+          "parameters": [
+            {
+              "name": "name",
+              "required": true,
+              "in": "body",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "description",
+              "required": true,
+              "in": "body",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "rating",
+              "required": true,
+              "in": "body",
+              "schema": {
+                "type": "number"
+              }
+            },
+            {
+              "name": "imageUrl",
+              "required": true,
+              "in": "body",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "category",
+              "required": true,
+              "in": "body",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "address",
+              "required": true,
+              "in": "body",
+              "schema": {
+                "type": "object"
+              }
+            }
+          ],
+          "produces": ["application/json"],
+          "responses": {
+            "200": {
+              "description": "newly created restaurant",
+              "schema": {
+                "$ref": "#/definitions/Restaurant"
+              }
+            },
+            "400": {
+              "description": "invalid parameters"
+            },
+            "401": {
+              "description": "only admin is permitted to this action"
+            }
+          }
+        }
+      },
+      "/restaurants/full": {
+        "get": {
+          "tags": ["Restaurants"],
+          "produces": ["application/json"],
+          "responses": {
+            "200": {
+              "description": "all restaurants with reviews",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/Restaurant"
+                }
+              }
+            }
+          }
+        }
+      },
+      "/restaurants/{id}": {
+        "delete": {
+          "tags": ["Restaurants"],
+          "parameters": [
+            {
+              "name": "id",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "produces": ["application/json"],
+          "responses": {
+            "200": {
+              "description": "deleted restaurant",
+              "schema": {
+                "$ref": "#/definitions/Restaurant"
+              }
+            },
+            "400": {
+              "description": "invalid parameters"
+            },
+            "401": {
+              "description": "only admin is permitted to this action"
+            },
+            "404": {
+              "description": "not restaurant with given id exists"
+            }
+          }
+        },
+        "put": {
+          "tags": ["Restaurants"],
+          "parameters": [
+            {
+              "name": "id",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "name",
+              "in": "body",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "description",
+              "in": "body",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "rating",
+              "in": "body",
+              "schema": {
+                "type": "number"
+              }
+            },
+            {
+              "name": "imageUrl",
+              "in": "body",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "category",
+              "in": "body",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "address",
+              "in": "body",
+              "schema": {
+                "type": "object"
+              }
+            }
+          ],
+          "produces": ["application/json"],
+          "responses": {
+            "200": {
+              "description": "updated restaurant",
+              "schema": {
+                "$ref": "#/definitions/Restaurant"
+              }
+            },
+            "400": {
+              "description": "invalid parameters"
+            },
+            "401": {
+              "description": "only admin is permitted to this action"
+            },
+            "404": {
+              "description": "not restaurant with given id exists"
             }
           }
         }
@@ -228,7 +758,6 @@
           "createdAt": "nov 23rd 2019"
         }
       }
-
     }
   }
 }
