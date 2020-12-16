@@ -1,19 +1,37 @@
+import { verify } from 'jsonwebtoken';
 import { RequestWithSession } from '../types/request-with-session';
 import { NextFunction, Response } from 'express';
 import { FoodDudeError } from '../models/food-dude-error';
 import { isCurrentUserAdmin } from '../utils/user-utils';
+import { get } from 'nconf';
+import { findUserById } from '../db/queries/user-queries';
 
-const routesToIgnore = ['/api-docs', '/auth/sign-in', '/auth/sign-up'].reduce((acc, curr) => {
-  acc.push(curr, `${curr}/`);
-  return acc;
-}, []);
-const routesToIgnoreSet = new Set(routesToIgnore);
+const accessTokenSecret = get('auth:secret');
+
+const routePrefixesToIgnore = ['/api-docs', '/auth'];
 
 export const authMiddleWare = (req: RequestWithSession, res: Response, next: NextFunction) => {
-  if (!routesToIgnoreSet.has(req.url) && !req.session.user) {
-    next(new FoodDudeError('unauthenticated user - access blocked', 401));
+  req.session.user = null;
+  if (routePrefixesToIgnore.findIndex(routePrefix => req.url.startsWith(routePrefix)) === -1) {
+    const authHeader = req.headers.authorization;
+
+    if (authHeader) {
+      const token = authHeader.split(' ')[1];
+
+      verify(token, accessTokenSecret, async (err, { _id }) => {
+        if (err) {
+          next(new FoodDudeError('auth error', 403));
+        } else {
+          req.session.user = await findUserById(_id);
+          next();
+        }
+      });
+    } else {
+      next(new FoodDudeError('auth error - no "authorization" header in request', 401));
+    }
+  } else {
+    next();
   }
-  next();
 };
 
 export const isAdminMiddleWare = (req: RequestWithSession, res: Response, next: NextFunction) => {

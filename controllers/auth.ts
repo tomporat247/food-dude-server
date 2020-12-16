@@ -1,38 +1,38 @@
 import * as objectHash from 'object-hash';
+import { sign } from 'jsonwebtoken';
 import { NextFunction, Response } from 'express';
 import { RequestWithSession } from '../types/request-with-session';
 import { SignInUserArguments, SignUpUserArguments, User } from '../models/user';
 import { createUser, findUserByEmailAndPassword } from '../db/queries/user-queries';
 import { FoodDudeError } from '../models/food-dude-error';
-import { getUserWithoutPrivateData } from '../utils/user-utils';
+import { get } from 'nconf';
+
+const accessTokenSecret = get('auth:secret');
+
+const generateAccessToken = (user: User) => sign({ _id: user._id }, accessTokenSecret);
 
 export const signUp = async (req: RequestWithSession<SignUpUserArguments>, res: Response, next: NextFunction) => {
   try {
     const { password, ...userData } = req.body;
-    const user: User = { ...userData, role: 'viewer', passwordHash: objectHash(password) };
+    const newUserData: User = { ...userData, role: 'viewer', passwordHash: objectHash(password) };
 
-    req.session.user = await createUser(user);
-    res.send(getUserWithoutPrivateData(req.session.user));
+    const user = await createUser(newUserData);
+    res.send(generateAccessToken(user));
   } catch (e) {
     next(e.code === 11000 ? new FoodDudeError(`"${req.body.email}" email is taken by another user`, 403) : e);
   }
 };
 
-export const signIn = async (req: RequestWithSession<SignInUserArguments>, res: Response, next: NextFunction) => {
+export const login = async (req: RequestWithSession<SignInUserArguments>, res: Response, next: NextFunction) => {
   try {
     const { email, password } = req.body;
-    req.session.user = await findUserByEmailAndPassword(email, objectHash(password));
-    if (req.session.user === null) {
+    const user = await findUserByEmailAndPassword(email, objectHash(password));
+    if (user === null) {
       next(new FoodDudeError('no match for user with given credentials', 404));
     } else {
-      res.send(getUserWithoutPrivateData(req.session.user));
+      res.send(generateAccessToken(user));
     }
   } catch (e) {
     next(e);
   }
-};
-
-export const signOut = (req: RequestWithSession, res: Response) => {
-  req.session.user = null;
-  res.sendStatus(200);
 };

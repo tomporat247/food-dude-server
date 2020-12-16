@@ -1,11 +1,10 @@
 import { Router } from 'express';
-import { signIn, signOut, signUp } from '../controllers/auth';
-import { validateUserSignInBody, validateUserSignUpBody } from '../middlewares/validators/auth-validator';
+import { login, signUp } from '../controllers/auth';
+import { validateUserLoginBody, validateUserRegisterBody } from '../middlewares/validators/auth-validator';
 
 export const authRouter = Router();
 
 // @ts-ignore
-authRouter.post('/sign-in', validateUserSignInBody, signIn);
+authRouter.post('/login', validateUserLoginBody, login);
 // @ts-ignore
-authRouter.post('/sign-up', validateUserSignUpBody, signUp);
-authRouter.post('/sign-out', signOut);
+authRouter.post('/register', validateUserRegisterBody, signUp);

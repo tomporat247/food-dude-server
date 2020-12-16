@@ -10,10 +10,10 @@ const validateAuthBody = (schema: Schema, req: Request, next: NextFunction) => {
   next();
 };
 
-export const validateUserSignInBody = (req: Request, res: Response, next: NextFunction) => {
+export const validateUserLoginBody = (req: Request, res: Response, next: NextFunction) => {
   validateAuthBody(userSignInSchema, req, next);
 };
 
-export const validateUserSignUpBody = (req: Request, res: Response, next: NextFunction) => {
+export const validateUserRegisterBody = (req: Request, res: Response, next: NextFunction) => {
   validateAuthBody(userSchema, req, next);
 };
