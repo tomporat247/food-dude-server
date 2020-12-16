@@ -41,7 +41,7 @@
       }
     },
     "paths": {
-      "/authentication/sign-in": {
+      "/auth/sign-in": {
         "post": {
           "tags": ["Users"],
           "parameters": [
@@ -79,7 +79,7 @@
           }
         }
       },
-      "/authentication/sign-up": {
+      "/auth/sign-up": {
         "post": {
           "tags": ["Users"],
           "parameters": [
@@ -117,7 +117,7 @@
           }
         }
       },
-      "/authentication/sign-out": {
+      "/auth/sign-out": {
         "post": {
           "tags": ["Users"],
           "produces": ["application/json"],

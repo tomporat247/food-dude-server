@@ -6,7 +6,7 @@ import {
   removeRestaurant,
   updateRestaurant
 } from '../controllers/restaurant';
-import { isAdminMiddleWare } from '../middlewares/authentication';
+import { isAdminMiddleWare } from '../middlewares/auth';
 import {
   validateCreateRestaurantBody,
   validateUpdateRestaurantBody

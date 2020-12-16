@@ -3,13 +3,13 @@ import { NextFunction, Response } from 'express';
 import { FoodDudeError } from '../models/food-dude-error';
 import { isCurrentUserAdmin } from '../utils/user-utils';
 
-const routesToIgnore = ['/api-docs', '/authentication/sign-in', '/authentication/sign-up'].reduce((acc, curr) => {
+const routesToIgnore = ['/api-docs', '/auth/sign-in', '/auth/sign-up'].reduce((acc, curr) => {
   acc.push(curr, `${curr}/`);
   return acc;
 }, []);
 const routesToIgnoreSet = new Set(routesToIgnore);
 
-export const authenticationMiddleWare = (req: RequestWithSession, res: Response, next: NextFunction) => {
+export const authMiddleWare = (req: RequestWithSession, res: Response, next: NextFunction) => {
   if (!routesToIgnoreSet.has(req.url) && !req.session.user) {
     next(new FoodDudeError('unauthenticated user - access blocked', 401));
   }

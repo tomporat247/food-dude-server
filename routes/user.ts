@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { isAdminMiddleWare, isAdminOrCurrentUserMiddleware } from '../middlewares/authentication';
+import { isAdminMiddleWare, isAdminOrCurrentUserMiddleware } from '../middlewares/auth';
 import { getCurrentUser, getUsers, removeUser, updateUser } from '../controllers/user';
 import { validateUserUpdateBody } from '../middlewares/validators/user-validator';
 import { validateObjectIdParameter } from '../middlewares/validators/common-validators';

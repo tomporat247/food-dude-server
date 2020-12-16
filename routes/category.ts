@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { isAdminMiddleWare } from '../middlewares/authentication';
+import { isAdminMiddleWare } from '../middlewares/auth';
 import { validateCategoryUpdateBody, validateCreateCategoryBody } from '../middlewares/validators/category-validator';
 import { createNewCategory, getCategories, removeCategory, updateCategory } from '../controllers/category';
 import { validateObjectIdParameter } from '../middlewares/validators/common-validators';
