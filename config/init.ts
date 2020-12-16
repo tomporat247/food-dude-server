@@ -4,4 +4,5 @@ import { resolve } from 'path';
 nconf
   .argv()
   .env()
-  .file({ file: resolve(__dirname, 'config.json') });
+  .file('swagger', { file: resolve(__dirname, 'swagger-config.json') })
+  .file('defaults', { file: resolve(__dirname, 'config.json') });

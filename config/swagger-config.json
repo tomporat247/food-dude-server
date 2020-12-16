@@ -1,0 +1,234 @@
+{
+  "swaggerOptions": {
+    "swagger": "2.0",
+    "info": {
+      "version": "1.0.0",
+      "title": "FoodDude API",
+      "description": "Find the best restaurants",
+      "license": {
+        "name": "MIT",
+        "url": "https://opensource.org/licenses/MIT"
+      }
+    },
+    "host": "localhost:3000",
+    "basePath": "/",
+    "tags": [
+      {
+        "name": "Users",
+        "description": "API for users in the system"
+      },
+      {
+        "name": "Categories",
+        "description": "API for categories in the system, such as italian, fast food etc..."
+      },
+      {
+        "name": "Restaurants",
+        "description": "API for restaurants in the system"
+      },
+      {
+        "name": "Reviews",
+        "description": "API for restaurant reviews in the system"
+      }
+    ],
+    "schemes": ["http", "https"],
+    "consumes": ["application/json"],
+    "produces": ["application/json"],
+    "securityDefinitions": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "headers",
+        "name": "authorization"
+      }
+    },
+    "paths": {
+      "/users/login": {
+        "post": {
+          "summary": "Login user",
+          "tags": ["Users"],
+          "description": "Login user in system",
+          "parameters": [
+            {
+              "name": "user",
+              "in": "body",
+              "description": "Login user",
+              "schema": {
+                "$ref": "#/definitions/User"
+              }
+            }
+          ],
+          "produces": ["application/json"],
+          "responses": {
+            "200": {
+              "description": "Login Success",
+              "schema": {
+                "$ref": "#/definitions/User"
+              }
+            },
+            "401": {
+              "description": "Login details are not valid!!"
+            },
+            "404": {
+              "description": "Email is not registered!"
+            },
+            "500": {
+              "description": "User login failed!!"
+            }
+          }
+        }
+      }
+    },
+    "definitions": {
+      "User": {
+        "required": ["_id", "email", "firstName", "lastName", "role", "address"],
+        "properties": {
+          "_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string",
+            "description": "viewer or admin"
+          },
+          "address": {
+            "type": "object",
+            "required": ["city", "street", "houseNumber"],
+            "properties": {
+              "city": {
+                "type": "string"
+              },
+              "street": {
+                "type": "string"
+              },
+              "houseNumber": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        "example": {
+          "_id": "xxx",
+          "email": "JohnDoe@gmail.com",
+          "firstName": "John",
+          "lastName": "Doe",
+          "role": "viewer",
+          "address": { "city": "Tel Aviv", "street": "Hashalom", "houseNumber": 1 }
+        }
+      },
+      "Category": {
+        "required": ["_id", "name", "description"],
+        "properties": {
+          "_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "_id": "xxx",
+          "name": "italian",
+          "description": "pizza, pasta and so much more"
+        }
+      },
+      "Restaurant": {
+        "required": ["_id", "name", "description", "rating", "address", "imageUrl", "category"],
+        "properties": {
+          "_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "rating": {
+            "type": "number"
+          },
+          "address": {
+            "type": "object",
+            "required": ["city", "street", "houseNumber"],
+            "properties": {
+              "city": {
+                "type": "string"
+              },
+              "street": {
+                "type": "string"
+              },
+              "houseNumber": {
+                "type": "number"
+              }
+            }
+          },
+          "imageUrl": {
+            "type": "string"
+          },
+          "category": {
+            "$ref": "#/definitions/Category"
+          },
+          "reviews": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/Review"
+            }
+          }
+        },
+        "example": {
+          "_id": "xxx",
+          "name": "KFC",
+          "description": "fried chicken goodies",
+          "rating": "10",
+          "imageUrl": "https://some-link",
+          "address": { "city": "Tel Aviv", "street": "Hashalom", "houseNumber": 1 },
+          "category": "some category",
+          "reviews": ["review 1", "review 2"]
+        }
+      },
+      "Review": {
+        "required": ["_id", "user", "restaurant", "content", "createdAt"],
+        "properties": {
+          "_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "user": {
+            "$ref": "#/definitions/User"
+          },
+          "restaurant": {
+            "$ref": "#/definitions/Restaurant"
+          },
+          "content": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date"
+          }
+        },
+        "example": {
+          "_id": "xxx",
+          "user": "some user",
+          "restaurant": "some restaurant",
+          "content": "delicious meal",
+          "createdAt": "nov 23rd 2019"
+        }
+      }
+
+    }
+  }
+}
