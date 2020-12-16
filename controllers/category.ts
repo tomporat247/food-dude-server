@@ -23,7 +23,7 @@ export const createNewCategory = async (req: RequestWithSession<Category, any>, 
   try {
     const categoryWithMatchingName = await findCategoryByName(req.body.name);
     if (categoryWithMatchingName) {
-      next(new FoodDudeError(`category with name ${req.body.name} already exists`, 400));
+      next(new FoodDudeError(`category with name ${req.body.name} already exists`, 403));
     } else {
       const newCategory = await createCategory(req.body);
       res.send(newCategory);
@@ -39,11 +39,19 @@ export const updateCategory = async (
   next: NextFunction
 ) => {
   try {
-    const updatedCategory = await updateCategoryById(req.params.id, req.body);
-    if (updatedCategory === null) {
-      next(new FoodDudeError(`could not find category with id: "${req.params.id}"`, 404));
+    let categoryWithMatchingName;
+    if (req.body.name) {
+      categoryWithMatchingName = await findCategoryByName(req.body.name);
+    }
+    if (categoryWithMatchingName) {
+      next(new FoodDudeError(`category with name "${req.body.name}" already exists`, 403));
     } else {
-      res.send(updatedCategory);
+      const updatedCategory = await updateCategoryById(req.params.id, req.body);
+      if (updatedCategory === null) {
+        next(new FoodDudeError(`could not find category with id: "${req.params.id}"`, 404));
+      } else {
+        res.send(updatedCategory);
+      }
     }
   } catch (e) {
     next(e);
