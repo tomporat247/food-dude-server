@@ -39,7 +39,7 @@ export type SignInUserArguments = Omit<Omit<Omit<SignUpUserArguments, 'address'>
  *          email:
  *            type: string
  *            format: email
- *            description: Email for the user, needs to be unique
+ *            description: must be unique
  *          firstName:
  *            type: string
  *          lastName:
