@@ -1,10 +1,7 @@
 #!/usr/bin/env node
 
-/**
- * Module dependencies.
- */
-import '../config/init';
-import { app } from '../app';
+import '../../config/init';
+import { app } from '../../app';
 import * as http from 'http';
 import { get } from 'nconf';
 import { connectToDB } from '../db/connect';

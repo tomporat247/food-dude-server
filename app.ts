@@ -1,10 +1,10 @@
 import * as express from 'express';
-import { router } from './routes';
+import { router } from './src/routes';
 import { json } from 'body-parser';
 import * as session from 'express-session';
-import { errorMiddleware } from './middlewares/error';
+import { errorMiddleware } from './src/middlewares/error';
 import { get } from 'nconf';
-import { authMiddleWare } from './middlewares/auth';
+import { authMiddleWare } from './src/middlewares/auth';
 
 export const app = express();
 
