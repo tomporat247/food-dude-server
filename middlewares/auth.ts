@@ -44,11 +44,11 @@ export const isAdminMiddleWare = (req: RequestWithSession, res: Response, next: 
 };
 
 export const isAdminOrCurrentUserMiddleware = (
-  req: RequestWithSession<any, { email: string }>,
+  req: RequestWithSession<any, { id: string }>,
   res: Response,
   next: NextFunction
 ) => {
-  if (req.params.email !== req.session.user?.email && !isCurrentUserAdmin(req)) {
+  if (req.params.id !== req.session.user?._id && !isCurrentUserAdmin(req)) {
     next(
       new FoodDudeError(
         `permission error - user role must be admin or given email should match current user's email"`,
