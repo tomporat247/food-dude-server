@@ -14,6 +14,19 @@ export const getUsers = async (req: RequestWithSession<any, { email: string }>, 
   }
 };
 
+export const getCurrentUser = async (req: RequestWithSession, res: Response, next: NextFunction) => {
+  try {
+    const user = req?.session?.user;
+    if (user) {
+      res.send(getUserWithoutPrivateData(user));
+    } else {
+      next(new FoodDudeError('no logged in user', 404));
+    }
+  } catch (e) {
+    next(e);
+  }
+};
+
 export const removeUser = async (req: RequestWithSession<any, { id: string }>, res: Response, next: NextFunction) => {
   try {
     const userToDelete = await findUserById(req.params.id);
