@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import {
   createNewRestaurant,
+  getFullRestaurant,
   getFullRestaurants,
   getRestaurants,
   removeRestaurant,
@@ -17,6 +18,8 @@ export const restaurantRouter = Router();
 
 //@ts-ignore
 restaurantRouter.get('/', getRestaurants);
+//@ts-ignore
+restaurantRouter.get('/:id', validateObjectIdParameter, getFullRestaurant);
 //@ts-ignore
 restaurantRouter.get('/full', getFullRestaurants);
 //@ts-ignore

@@ -1,6 +1,8 @@
 import { RestaurantModel } from '../schemas/restaurant-schema';
 import { Restaurant } from '../../models/restaurant';
 
+export const findRestaurantById = (id: string) => RestaurantModel.findById(id).populate('category').populate('reviews');
+
 export const findAllRestaurants = ({
   populateReviews,
   populateCategory

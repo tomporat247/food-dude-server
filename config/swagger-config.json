@@ -487,6 +487,34 @@
         }
       },
       "/restaurants/{id}": {
+        "get": {
+          "tags": ["Restaurants"],
+          "parameters": [
+            {
+              "name": "id",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "produces": ["application/json"],
+          "responses": {
+            "200": {
+              "description": "restaurant",
+              "schema": {
+                "$ref": "#/definitions/Restaurant"
+              }
+            },
+            "400": {
+              "description": "invalid parameters"
+            },
+            "404": {
+              "description": "not restaurant with given id exists"
+            }
+          }
+        },
         "delete": {
           "tags": ["Restaurants"],
           "parameters": [

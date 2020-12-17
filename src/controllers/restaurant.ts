@@ -3,6 +3,7 @@ import { CreateRestaurantBody, UpdateRestaurantBody } from '../models/restaurant
 import {
   createRestaurant,
   findAllRestaurants,
+  findRestaurantById,
   removeRestaurantById,
   updateRestaurantById
 } from '../db/queries/restaurant-queries';
@@ -23,6 +24,22 @@ export const getFullRestaurants = async (req: Request, res: Response, next: Next
   try {
     const restaurants = await findAllRestaurants({ populateCategory: true, populateReviews: true });
     res.send(restaurants);
+  } catch (e) {
+    next(e);
+  }
+};
+export const getFullRestaurant = async (
+  req: RequestWithSession<any, { id: string }>,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const restaurant = await findRestaurantById(req.params.id);
+    if (restaurant === null) {
+      next(new FoodDudeError(`cannot find restaurant with id: "${req.params.id}"`, 404));
+    } else {
+      res.send(restaurant);
+    }
   } catch (e) {
     next(e);
   }
