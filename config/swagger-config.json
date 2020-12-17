@@ -567,6 +567,45 @@
             }
           }
         }
+      },
+      "/reviews": {
+        "get": {
+          "tags": ["Reviews"],
+          "parameters": [
+            {
+              "name": "restaurantId",
+              "in": "query",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "userId",
+              "in": "query",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "produces": ["application/json"],
+          "responses": {
+            "200": {
+              "description": "reviews",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/Review"
+                }
+              }
+            },
+            "400": {
+              "description": "invalid parameters"
+            },
+            "404": {
+              "description": "not restaurant or user with given id exists"
+            }
+          }
+        }
       }
     },
     "definitions": {
