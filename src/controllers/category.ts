@@ -9,6 +9,7 @@ import {
 } from '../db/queries/categroy-queries';
 import { FoodDudeError } from '../models/food-dude-error';
 import { Category } from '../models/category';
+import { findRestaurantsByCategory } from '../db/queries/restaurant-queries';
 
 export const getCategories = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -58,17 +59,23 @@ export const updateCategory = async (
   }
 };
 
-// TODO: Do not allow removing categories that have restaurants
 export const removeCategory = async (
   req: RequestWithSession<any, { id: string }>,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const deletedCategory = await removeCategoryById(req.params.id);
+    const categoryId = req.params.id;
+
+    const categoryRestaurants = await findRestaurantsByCategory(categoryId);
+    if (categoryRestaurants.length > 0) {
+      next(new FoodDudeError('cannot delete category with listed restaurants', 403));
+    }
+
+    const deletedCategory = await removeCategoryById(categoryId);
 
     if (deletedCategory === null) {
-      next(new FoodDudeError(`could not find category with id: "${req.params.id}"`, 404));
+      next(new FoodDudeError(`could not find category with id: "${categoryId}"`, 404));
     } else {
       res.send(deletedCategory);
     }

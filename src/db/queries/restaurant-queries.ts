@@ -24,3 +24,5 @@ export const updateRestaurantById = (id: string, update: Partial<Restaurant>) =>
   RestaurantModel.findByIdAndUpdate(id, { $set: update }, { new: true });
 
 export const removeRestaurantById = (id: string) => RestaurantModel.findByIdAndRemove(id);
+
+export const findRestaurantsByCategory = (category: string) => RestaurantModel.find({ category });
