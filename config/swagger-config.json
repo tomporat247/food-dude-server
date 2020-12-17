@@ -47,19 +47,19 @@
           "tags": ["Users"],
           "parameters": [
             {
-              "name": "email",
-              "required": true,
+              "name": "body",
               "in": "body",
-              "schema": {
-                "type": "string"
-              }
-            },
-            {
-              "name": "password",
               "required": true,
-              "in": "body",
               "schema": {
-                "type": "string"
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
               }
             }
           ],
@@ -85,35 +85,28 @@
           "tags": ["Users"],
           "parameters": [
             {
-              "name": "email",
+              "name": "body",
               "required": true,
               "in": "body",
               "schema": {
-                "type": "string"
-              }
-            },
-            {
-              "name": "firstName",
-              "required": true,
-              "in": "body",
-              "schema": {
-                "type": "string"
-              }
-            },
-            {
-              "name": "lastName",
-              "required": true,
-              "in": "body",
-              "schema": {
-                "type": "string"
-              }
-            },
-            {
-              "name": "password",
-              "required": true,
-              "in": "body",
-              "schema": {
-                "type": "string"
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "firstName": {
+                    "type": "string"
+                  },
+                  "lastName": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "address": {
+                    "$ref": "#/definitions/Address"
+                  }
+                }
               }
             }
           ],
@@ -167,39 +160,28 @@
               }
             },
             {
-              "name": "email",
+              "name": "body",
+              "required": true,
               "in": "body",
               "schema": {
-                "type": "string",
-                "format": "email"
-              }
-            },
-            {
-              "name": "address",
-              "in": "body",
-              "schema": {
-                "type": "object"
-              }
-            },
-            {
-              "name": "firstName",
-              "in": "body",
-              "schema": {
-                "type": "string"
-              }
-            },
-            {
-              "name": "lastName",
-              "in": "body",
-              "schema": {
-                "type": "string"
-              }
-            },
-            {
-              "name": "password",
-              "in": "body",
-              "schema": {
-                "type": "string"
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "firstName": {
+                    "type": "string"
+                  },
+                  "lastName": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "address": {
+                    "$ref": "#/definitions/Address"
+                  }
+                }
               }
             }
           ],
@@ -268,19 +250,19 @@
           "tags": ["Categories"],
           "parameters": [
             {
-              "name": "name",
+              "name": "body",
               "required": true,
               "in": "body",
               "schema": {
-                "type": "string"
-              }
-            },
-            {
-              "name": "description",
-              "required": true,
-              "in": "body",
-              "schema": {
-                "type": "string"
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  }
+                }
               }
             }
           ],
@@ -317,19 +299,19 @@
               }
             },
             {
-              "name": "name",
+              "name": "body",
               "required": true,
               "in": "body",
               "schema": {
-                "type": "string"
-              }
-            },
-            {
-              "name": "description",
-              "required": true,
-              "in": "body",
-              "schema": {
-                "type": "string"
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  }
+                }
               }
             }
           ],
@@ -404,51 +386,31 @@
           "tags": ["Restaurants"],
           "parameters": [
             {
-              "name": "name",
+              "name": "body",
               "required": true,
               "in": "body",
               "schema": {
-                "type": "string"
-              }
-            },
-            {
-              "name": "description",
-              "required": true,
-              "in": "body",
-              "schema": {
-                "type": "string"
-              }
-            },
-            {
-              "name": "rating",
-              "required": true,
-              "in": "body",
-              "schema": {
-                "type": "number"
-              }
-            },
-            {
-              "name": "imageUrl",
-              "required": true,
-              "in": "body",
-              "schema": {
-                "type": "string"
-              }
-            },
-            {
-              "name": "category",
-              "required": true,
-              "in": "body",
-              "schema": {
-                "type": "string"
-              }
-            },
-            {
-              "name": "address",
-              "required": true,
-              "in": "body",
-              "schema": {
-                "type": "object"
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "rating": {
+                    "type": "number"
+                  },
+                  "imageUrl": {
+                    "type": "string"
+                  },
+                  "category": {
+                    "type": "string"
+                  },
+                  "address": {
+                    "$ref": "#/definitions/Address"
+                  }
+                }
               }
             }
           ],
@@ -558,45 +520,31 @@
               }
             },
             {
-              "name": "name",
+              "name": "body",
+              "required": true,
               "in": "body",
               "schema": {
-                "type": "string"
-              }
-            },
-            {
-              "name": "description",
-              "in": "body",
-              "schema": {
-                "type": "string"
-              }
-            },
-            {
-              "name": "rating",
-              "in": "body",
-              "schema": {
-                "type": "number"
-              }
-            },
-            {
-              "name": "imageUrl",
-              "in": "body",
-              "schema": {
-                "type": "string"
-              }
-            },
-            {
-              "name": "category",
-              "in": "body",
-              "schema": {
-                "type": "string"
-              }
-            },
-            {
-              "name": "address",
-              "in": "body",
-              "schema": {
-                "type": "object"
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "rating": {
+                    "type": "number"
+                  },
+                  "imageUrl": {
+                    "type": "string"
+                  },
+                  "category": {
+                    "type": "string"
+                  },
+                  "address": {
+                    "$ref": "#/definitions/Address"
+                  }
+                }
               }
             }
           ],
@@ -770,6 +718,25 @@
           "restaurant": "some restaurant",
           "content": "delicious meal",
           "createdAt": "nov 23rd 2019"
+        }
+      },
+      "Address": {
+        "required": ["city", "street", "houseNumber"],
+        "properties": {
+          "city": {
+            "type": "string"
+          },
+          "street": {
+            "type": "string"
+          },
+          "houseNumber": {
+            "type": "number"
+          }
+        },
+        "example": {
+          "city": "Tel Aviv",
+          "street": "Hashalom",
+          "houseNumber": 1
         }
       }
     }
