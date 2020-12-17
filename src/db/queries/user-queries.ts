@@ -1,6 +1,8 @@
 import { User } from '../../models/user';
 import { UserModel } from '../schemas/user-schema';
 
+export const doesUserExist = (id: string) => UserModel.exists({ _id: id });
+
 export const getAllUsers = () => UserModel.find();
 
 export const createUser = (user: User) => UserModel.create(user);

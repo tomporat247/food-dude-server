@@ -14,3 +14,12 @@ export const validateObjectIdParameter = (
   validateSchema(objectIdSchema, { id: req.params.id }, 'required');
   next();
 };
+
+export const getQueryPropertiesObjectIdValidator = (queryPropperties: string[]) => (
+  req: RequestWithSession,
+  res: Response,
+  next: NextFunction
+) => {
+  queryPropperties.forEach(property => validateSchema(objectIdSchema, { id: req.query[property] }, 'required'));
+  next();
+};
