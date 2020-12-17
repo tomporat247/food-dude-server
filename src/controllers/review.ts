@@ -14,8 +14,8 @@ export const getReviews = async (
     const restaurantId = req.query.restaurantId;
     const userId = req.query.userId;
 
-    const restaurantExists = await doesRestaurantExist(restaurantId);
-    const userExists = await doesUserExist(userId);
+    const restaurantExists = !restaurantId || await doesRestaurantExist(restaurantId);
+    const userExists = !userId || await doesUserExist(userId);
 
     if (!restaurantExists) {
       next(new FoodDudeError(`restaurant with id "${restaurantId}" does not exist`, 404));
