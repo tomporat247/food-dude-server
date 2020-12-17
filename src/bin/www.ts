@@ -6,7 +6,7 @@ import * as http from 'http';
 import { get } from 'nconf';
 import { connectToDB } from '../db/connect';
 
-const port = normalizePort(get('port') || process.env.PORT || '3000');
+const port = normalizePort(process.env.PORT || get('port') || '3000');
 let server: http.Server;
 
 const runServer = async () => {
