@@ -30,7 +30,7 @@
         "description": "API for restaurant reviews in the system"
       }
     ],
-    "schemes": ["https" ,"http"],
+    "schemes": ["http", "https"],
     "consumes": ["application/json"],
     "produces": ["application/json"],
     "securityDefinitions": {
