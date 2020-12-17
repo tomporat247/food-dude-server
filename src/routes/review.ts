@@ -5,4 +5,4 @@ import { getQueryPropertiesObjectIdValidator } from '../middlewares/validators/c
 export const reviewRouter = Router();
 
 //@ts-ignore
-reviewRouter.get('/', getQueryPropertiesObjectIdValidator(['restaurantId', 'userId']), getReviews);
+reviewRouter.get('/', getQueryPropertiesObjectIdValidator({ optional: ['restaurantId', 'userId'] }), getReviews);

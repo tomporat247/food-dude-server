@@ -15,11 +15,15 @@ export const validateObjectIdParameter = (
   next();
 };
 
-export const getQueryPropertiesObjectIdValidator = (queryPropperties: string[]) => (
-  req: RequestWithSession,
-  res: Response,
-  next: NextFunction
-) => {
-  queryPropperties.forEach(property => validateSchema(objectIdSchema, { id: req.query[property] }, 'required'));
+export const getQueryPropertiesObjectIdValidator = ({
+  required,
+  optional
+}: {
+  required: string[];
+  optional: string[];
+}) => (req: RequestWithSession, res: Response, next: NextFunction) => {
+  (required || [])
+    .concat((optional || []).filter(property => property in req.query))
+    .forEach(property => validateSchema(objectIdSchema, { id: req.query[property] }, 'required'));
   next();
 };
