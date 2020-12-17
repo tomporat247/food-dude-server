@@ -1,0 +1,16 @@
+{
+  "port": 3000,
+  "auth": {
+    "secret": "I AM BATMAN"
+  },
+  "db": {
+    "connectionString": "mongodb+srv://food-dude:nDDLUO3Pdn4oR1Xt@cluster0.1sosd.mongodb.net/food-dude?retryWrites=true&w=majority",
+    "options": {
+      "useNewUrlParser": true,
+      "useCreateIndex": true,
+      "useFindAndModify": false,
+      "reconnectTries": 10,
+      "reconnectInterval": 500
+    }
+  }
+}
