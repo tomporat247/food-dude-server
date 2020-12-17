@@ -1,4 +1,5 @@
 import * as express from 'express';
+import * as cors from 'cors';
 import { router } from './src/routes';
 import { json } from 'body-parser';
 import * as session from 'express-session';
@@ -8,6 +9,7 @@ import { authMiddleWare } from './src/middlewares/auth';
 
 export const app = express();
 
+app.use(cors());
 app.use(json());
 app.use(
   session({
