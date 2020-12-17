@@ -11,7 +11,7 @@ const accessTokenSecret = get('auth:secret');
 
 const generateAccessToken = (user: User) => sign({ _id: user._id }, accessTokenSecret);
 
-export const signUp = async (req: RequestWithSession<SignUpUserArguments>, res: Response, next: NextFunction) => {
+export const register = async (req: RequestWithSession<SignUpUserArguments>, res: Response, next: NextFunction) => {
   try {
     const { password, ...userData } = req.body;
     const newUserData: User = { ...userData, role: 'viewer', passwordHash: objectHash(password) };
