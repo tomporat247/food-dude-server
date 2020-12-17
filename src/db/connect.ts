@@ -7,6 +7,8 @@ export const connectToDB = async () => {
     .on('disconnected', () => console.log('DB disconnected'))
     .once('connected', () => console.log('DB connected'));
 
+  console.log('connectionString', get('db:connectionString'))
+
   await mongoose
     .connect(get('db:connectionString'), get('db:options'))
     .catch(err => console.log('DB connection error', err));
