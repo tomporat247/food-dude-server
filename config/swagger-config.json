@@ -10,7 +10,7 @@
         "url": "https://opensource.org/licenses/MIT"
       }
     },
-    "host": "https://food-dude.herokuapp.com",
+    "host": "food-dude.herokuapp.com",
     "basePath": "/",
     "tags": [
       {
