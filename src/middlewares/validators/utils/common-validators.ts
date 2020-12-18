@@ -1,4 +1,5 @@
 import { number, object, string } from 'joi';
+import { AddressArea } from '../../../types/address';
 
 export const mongoObjectIdValidator = require('joi-objectid')(require('joi'))();
 
@@ -6,7 +7,9 @@ export const emailSchema = object({ email: string().email() });
 
 export const addressSchema = object({
   address: {
-    area: string().required(),
+    area: string()
+      .valid(...Object.keys(AddressArea))
+      .required(),
     city: string().required(),
     street: string().required(),
     houseNumber: number().positive().required()
