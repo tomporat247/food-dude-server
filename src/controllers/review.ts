@@ -57,6 +57,7 @@ export const addReview = async (
   }
 };
 
+// TODO: Let only an admin or the owner to execute this
 export const updateReview = async (req: RequestWithSession<Partial<Review>, { id: string }>, res: Response, next: NextFunction) => {
   try {
     const updatedReview = await updateReviewById(req.params.id, req.body);
@@ -70,6 +71,7 @@ export const updateReview = async (req: RequestWithSession<Partial<Review>, { id
   }
 };
 
+// TODO: Let only an admin or the owner to execute this
 export const removeReview = async (req: RequestWithSession<any, { id: string }>, res: Response, next: NextFunction) => {
   try {
     const removedReview = await removeReviewById(req.params.id);
