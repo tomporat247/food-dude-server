@@ -1,5 +1,6 @@
 import { RestaurantModel } from '../schemas/restaurant-schema';
 import { Restaurant } from '../../models/restaurant';
+import { ReviewModel } from '../schemas/review-schema';
 
 export const doesRestaurantExist = (id: string) => RestaurantModel.exists({ _id: id });
 
@@ -27,6 +28,13 @@ export const createRestaurant = (restaurant: Restaurant) => RestaurantModel.crea
 export const updateRestaurantById = (id: string, update: Partial<Restaurant>) =>
   RestaurantModel.findByIdAndUpdate(id, { $set: update }, { new: true });
 
-export const removeRestaurantById = (id: string) => RestaurantModel.findByIdAndRemove(id);
+export const removeRestaurantById = async (id: string) => {
+  // TODO: User transaction with session
+  const [restaurant] = await Promise.all([
+    RestaurantModel.findByIdAndRemove(id),
+    ReviewModel.deleteMany({ restaurant: id })
+  ]);
+  return restaurant;
+};
 
 export const findRestaurantsByCategory = (category: string) => RestaurantModel.find({ category });
