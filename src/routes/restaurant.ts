@@ -2,7 +2,6 @@ import { Router } from 'express';
 import {
   createNewRestaurant,
   getFullRestaurant,
-  getFullRestaurants,
   getRestaurants,
   removeRestaurant,
   updateRestaurant
@@ -20,8 +19,6 @@ export const restaurantRouter = Router();
 restaurantRouter.get('/', getRestaurants);
 //@ts-ignore
 restaurantRouter.get('/:id', getParameterObjectIdValidator('id'), getFullRestaurant);
-//@ts-ignore
-restaurantRouter.get('/full', getFullRestaurants);
 //@ts-ignore
 restaurantRouter.post('/', isAdminMiddleWare, validateCreateRestaurantBody, createNewRestaurant);
 //@ts-ignore

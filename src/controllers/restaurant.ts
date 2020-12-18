@@ -20,14 +20,6 @@ export const getRestaurants = async (req: Request, res: Response, next: NextFunc
   }
 };
 
-export const getFullRestaurants = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const restaurants = await findAllRestaurants({ populateCategory: true, populateReviews: true });
-    res.send(restaurants);
-  } catch (e) {
-    next(e);
-  }
-};
 export const getFullRestaurant = async (
   req: RequestWithSession<any, { id: string }>,
   res: Response,
