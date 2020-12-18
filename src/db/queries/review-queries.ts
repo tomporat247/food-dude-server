@@ -14,3 +14,12 @@ export const createReview = async (review: Review) => {
   await RestaurantModel.updateOne({ _id: review.restaurant }, { $addToSet: { reviews: createdReview._id } });
   return createdReview;
 };
+
+export const removeReviewById = async (id: string) => {
+  // TODO: Use transaction with session
+  const review = await ReviewModel.findByIdAndRemove(id);
+  if (review) {
+    await RestaurantModel.updateOne({ _id: review.restaurant }, { $pull: { reviews: id } });
+  }
+  return review;
+};

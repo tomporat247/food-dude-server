@@ -11,7 +11,7 @@ export interface Restaurant {
   address: Address;
   imageUrl: string;
   category: Types.ObjectId | Category | string;
-  reviews: Types.ObjectId[] | Review[];
+  reviews: Types.ObjectId[] | Review[] | string[];
 }
 
 export type CreateRestaurantBody = Omit<Omit<Restaurant, '_id'>, 'reviews'>;

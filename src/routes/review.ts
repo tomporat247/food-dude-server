@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { addReview, getReviews } from '../controllers/review';
+import { addReview, getReviews, removeReview } from '../controllers/review';
 import {
   getParameterObjectIdValidator,
   getQueryPropertiesObjectIdValidator
@@ -12,3 +12,5 @@ export const reviewRouter = Router();
 reviewRouter.get('/', getQueryPropertiesObjectIdValidator({ optional: ['restaurantId', 'userId'] }), getReviews);
 //@ts-ignore
 reviewRouter.post('/:restaurantId', getParameterObjectIdValidator('restaurantId'), validateCreateReviewBody, addReview);
+//@ts-ignore
+reviewRouter.delete('/:id', getParameterObjectIdValidator('id'), removeReview);
