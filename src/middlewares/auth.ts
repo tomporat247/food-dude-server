@@ -4,7 +4,6 @@ import { NextFunction, Response } from 'express';
 import { FoodDudeError } from '../models/food-dude-error';
 import { isCurrentUserAdmin } from '../utils/user-utils';
 import { get } from 'nconf';
-import { findUserById } from '../db/queries/user-queries';
 
 const accessTokenSecret = get('auth:secret');
 
@@ -18,11 +17,11 @@ export const authMiddleWare = (req: RequestWithSession, res: Response, next: Nex
     if (authHeader) {
       const token = authHeader.split(' ')[1];
 
-      verify(token, accessTokenSecret, async (err, { _id }) => {
+      verify(token, accessTokenSecret, async (err, user) => {
         if (err) {
           next(new FoodDudeError('auth error', 403));
         } else {
-          req.session.user = await findUserById(_id);
+          req.session.user = user;
           next();
         }
       });
