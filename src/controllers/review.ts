@@ -29,3 +29,11 @@ export const getReviews = async (
     next(e);
   }
 };
+
+export const addReview = async (
+    req: RequestWithSession<any, any, { restaurantId: string; userId: string }>,
+    res: Response,
+    next: NextFunction
+) => {
+
+};

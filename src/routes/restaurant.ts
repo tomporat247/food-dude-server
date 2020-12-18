@@ -12,25 +12,25 @@ import {
   validateCreateRestaurantBody,
   validateUpdateRestaurantBody
 } from '../middlewares/validators/restaurant-validator';
-import { validateObjectIdParameter } from '../middlewares/validators/common-validators';
+import { getParameterObjectIdValidator } from '../middlewares/validators/common-validators';
 
 export const restaurantRouter = Router();
 
 //@ts-ignore
 restaurantRouter.get('/', getRestaurants);
 //@ts-ignore
-restaurantRouter.get('/:id', validateObjectIdParameter, getFullRestaurant);
+restaurantRouter.get('/:id', getParameterObjectIdValidator('id'), getFullRestaurant);
 //@ts-ignore
 restaurantRouter.get('/full', getFullRestaurants);
 //@ts-ignore
 restaurantRouter.post('/', isAdminMiddleWare, validateCreateRestaurantBody, createNewRestaurant);
 //@ts-ignore
-restaurantRouter.delete('/:id', isAdminMiddleWare, validateObjectIdParameter, removeRestaurant);
+restaurantRouter.delete('/:id', isAdminMiddleWare, getParameterObjectIdValidator('id'), removeRestaurant);
 restaurantRouter.put(
   '/:id',
   isAdminMiddleWare,
   //@ts-ignore
-  validateObjectIdParameter,
+  getParameterObjectIdValidator('id'),
   validateUpdateRestaurantBody,
   updateRestaurant
 );
