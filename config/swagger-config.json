@@ -657,19 +657,7 @@
             "description": "viewer or admin"
           },
           "address": {
-            "type": "object",
-            "required": ["city", "street", "houseNumber"],
-            "properties": {
-              "city": {
-                "type": "string"
-              },
-              "street": {
-                "type": "string"
-              },
-              "houseNumber": {
-                "type": "number"
-              }
-            }
+            "$ref": "#/definitions/Address"
           }
         },
         "example": {
@@ -678,7 +666,7 @@
           "firstName": "John",
           "lastName": "Doe",
           "role": "viewer",
-          "address": { "city": "Tel Aviv", "street": "Hashalom", "houseNumber": 1 }
+          "address": { "area": "center", "city": "Tel Aviv", "street": "Hashalom", "houseNumber": 1 }
         }
       },
       "Category": {
@@ -718,19 +706,7 @@
             "type": "number"
           },
           "address": {
-            "type": "object",
-            "required": ["city", "street", "houseNumber"],
-            "properties": {
-              "city": {
-                "type": "string"
-              },
-              "street": {
-                "type": "string"
-              },
-              "houseNumber": {
-                "type": "number"
-              }
-            }
+            "$ref": "#/definitions/Address"
           },
           "imageUrl": {
             "type": "string"
@@ -751,7 +727,7 @@
           "description": "fried chicken goodies",
           "rating": "10",
           "imageUrl": "https://some-link",
-          "address": { "city": "Tel Aviv", "street": "Hashalom", "houseNumber": 1 },
+          "address": { "area": "center", "city": "Tel Aviv", "street": "Hashalom", "houseNumber": 1 },
           "category": "some category",
           "reviews": ["review 1", "review 2"]
         }
@@ -791,8 +767,11 @@
         }
       },
       "Address": {
-        "required": ["city", "street", "houseNumber"],
+        "required": ["area", "city", "street", "houseNumber"],
         "properties": {
+          "area": {
+            "type": "string"
+          },
           "city": {
             "type": "string"
           },
@@ -804,6 +783,7 @@
           }
         },
         "example": {
+          "area": "center",
           "city": "Tel Aviv",
           "street": "Hashalom",
           "houseNumber": 1

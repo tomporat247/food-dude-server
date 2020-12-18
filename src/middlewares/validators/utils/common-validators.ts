@@ -6,6 +6,7 @@ export const emailSchema = object({ email: string().email() });
 
 export const addressSchema = object({
   address: {
+    area: string().required(),
     city: string().required(),
     street: string().required(),
     houseNumber: number().positive().required()
