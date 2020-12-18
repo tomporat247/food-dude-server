@@ -6,10 +6,10 @@ const reviewSchema: Schema<Review> = new Schema(
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     restaurant: { type: Schema.Types.ObjectId, ref: 'Restaurant', required: true },
     content: { type: String, required: true },
-    createdAt: { type: Date, required: true }
   },
   {
-    versionKey: false
+    versionKey: false,
+    timestamps: true
   }
 );
 

@@ -4,10 +4,11 @@ import { User } from './user';
 
 export interface Review {
   _id?: any;
-  user: Types.ObjectId | User;
-  restaurant: Types.ObjectId | Restaurant;
+  user: string | Types.ObjectId | User;
+  restaurant: string | Types.ObjectId | Restaurant;
   content: string;
   createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface ReviewDocument extends Review, Document {}

@@ -606,6 +606,49 @@
             }
           }
         }
+      },
+      "/reviews/{restaurantId}": {
+        "post": {
+          "tags": ["Reviews"],
+          "parameters": [
+            {
+              "name": "restaurantId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "body",
+              "required": true,
+              "in": "body",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "content": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          ],
+          "produces": ["application/json"],
+          "responses": {
+            "200": {
+              "description": "review",
+              "schema": {
+                "$ref": "#/definitions/Review"
+              }
+            },
+            "400": {
+              "description": "invalid parameters"
+            },
+            "404": {
+              "description": "not restaurant with given id exists"
+            }
+          }
+        }
       }
     },
     "definitions": {
@@ -749,6 +792,10 @@
           "createdAt": {
             "type": "string",
             "format": "date"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date"
           }
         },
         "example": {
@@ -756,7 +803,8 @@
           "user": "some user",
           "restaurant": "some restaurant",
           "content": "delicious meal",
-          "createdAt": "nov 23rd 2019"
+          "createdAt": "nov 23rd 2019",
+          "updatedAt": "nov 25th 2019"
         }
       },
       "Address": {
