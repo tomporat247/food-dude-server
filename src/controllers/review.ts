@@ -1,6 +1,6 @@
 import { RequestWithSession } from '../types/request-with-session';
 import { NextFunction, Response } from 'express';
-import { createReview, findReviews, removeReviewById } from '../db/queries/review-queries';
+import {createReview, findReviews, removeReviewById, updateReviewById} from '../db/queries/review-queries';
 import { doesRestaurantExist } from '../db/queries/restaurant-queries';
 import { FoodDudeError } from '../models/food-dude-error';
 import { doesUserExist } from '../db/queries/user-queries';
@@ -51,6 +51,19 @@ export const addReview = async (
       } as Review;
       const createdReview = await createReview(reviewData);
       res.send(createdReview);
+    }
+  } catch (e) {
+    next(e);
+  }
+};
+
+export const updateReview = async (req: RequestWithSession<Partial<Review>, { id: string }>, res: Response, next: NextFunction) => {
+  try {
+    const updatedReview = await updateReviewById(req.params.id, req.body);
+    if (updatedReview === null) {
+      next(new FoodDudeError(`review with id "${req.params.id}" does not exist`, 404));
+    } else {
+      res.send(updatedReview);
     }
   } catch (e) {
     next(e);

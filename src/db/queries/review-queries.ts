@@ -15,6 +15,9 @@ export const createReview = async (review: Review) => {
   return createdReview;
 };
 
+export const updateReviewById = (id: string, update: Partial<Review>) =>
+  ReviewModel.findByIdAndUpdate(id, { $set: update }, { new: true });
+
 export const removeReviewById = async (id: string) => {
   // TODO: Use transaction with session
   const review = await ReviewModel.findByIdAndRemove(id);

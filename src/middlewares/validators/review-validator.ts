@@ -16,3 +16,5 @@ export const validateCreateReviewBody = (
   validateSchema(reviewSchema, req.body, 'required');
   next();
 };
+
+export const validateUpdateReviewBody = validateCreateReviewBody;
