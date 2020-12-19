@@ -16,10 +16,24 @@ export const addressSchema = object({
   }
 });
 
-export const userSchema = emailSchema.concat(addressSchema).keys({
-  password: string().min(6),
-  firstName: string(),
-  lastName: string()
-});
+const basicUserSchema = object({ firstName: string(), lastName: string() });
+const roleSchema = object({ role: string().valid('admin', 'viewer') });
 
-export const userSchemaWithRole = userSchema.keys({ role: string().valid('admin', 'viewer') });
+export const userSchema = basicUserSchema
+  .concat(addressSchema)
+  .concat(emailSchema)
+  .keys({
+    password: string().min(6)
+  });
+
+export const userSchemaWithRole = userSchema.concat(roleSchema);
+
+export const userSearchSchema = basicUserSchema
+  .concat(roleSchema)
+  .concat(
+    addressSchema
+      .fork(['address'], field =>
+        field.fork(['area', 'city', 'street', 'houseNumber'], innerField => innerField.optional())
+      )
+      .keys({ email: string() })
+  );

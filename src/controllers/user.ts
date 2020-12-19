@@ -1,9 +1,9 @@
 import { RequestWithSession } from '../types/request-with-session';
 import { NextFunction, Response } from 'express';
-import { findAndUpdateUser, findUserById, getAllUsers } from '../db/queries/user-queries';
+import { findAndUpdateUser, findUserById, findUsersForSearch, getAllUsers } from '../db/queries/user-queries';
 import { FoodDudeError } from '../models/food-dude-error';
 import { getUserWithoutPrivateData } from '../utils/user-utils';
-import { UpdateUserArguments } from '../models/user';
+import { UpdateUserArguments, UserSearchProperties } from '../models/user';
 
 export const getUsers = async (req: RequestWithSession<any, { email: string }>, res: Response, next: NextFunction) => {
   try {
@@ -45,6 +45,19 @@ export const updateUser = async (
       req.session.user = updatedUser;
     }
     res.send(getUserWithoutPrivateData(updatedUser));
+  } catch (e) {
+    next(e);
+  }
+};
+
+export const searchUsers = async (
+  req: RequestWithSession<any, any, UserSearchProperties>,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const searchResults = await findUsersForSearch(req.query);
+    res.send(searchResults);
   } catch (e) {
     next(e);
   }
