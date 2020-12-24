@@ -686,7 +686,9 @@
               "description": "not restaurant with given id exists"
             }
           }
-        },
+        }
+      },
+      "/restaurants/{id}": {
         "delete": {
           "tags": ["Restaurants"],
           "parameters": [
