@@ -206,6 +206,20 @@
               "schema": {
                 "type": "number"
               }
+            },
+            {
+              "name": "contributor",
+              "in": "query",
+              "schema": {
+                "type": "boolean"
+              }
+            },
+            {
+              "name": "currentlyLoggedIn",
+              "in": "query",
+              "schema": {
+                "type": "boolean"
+              }
             }
           ],
           "produces": ["application/json"],

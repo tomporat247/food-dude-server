@@ -1,4 +1,4 @@
-import { number, object, string } from 'joi';
+import { boolean, number, object, string } from 'joi';
 import { AddressArea } from '../../../types/address';
 
 export const mongoObjectIdValidator = require('joi-objectid')(require('joi'))();
@@ -28,12 +28,14 @@ export const userSchema = basicUserSchema
 
 export const userSchemaWithRole = userSchema.concat(roleSchema);
 
-export const userSearchSchema = basicUserSchema
-  .concat(roleSchema)
-  .concat(
-    addressSchema
-      .fork(['address'], field =>
-        field.fork(['area', 'city', 'street', 'houseNumber'], innerField => innerField.optional())
-      )
-      .keys({ email: string() })
-  );
+export const userSearchSchema = basicUserSchema.concat(roleSchema).concat(
+  addressSchema
+    .fork(['address'], field =>
+      field.fork(['area', 'city', 'street', 'houseNumber'], innerField => innerField.optional())
+    )
+    .keys({
+      email: string(),
+      contributor: boolean(),
+      currentlyLoggedIn: boolean()
+    })
+);
