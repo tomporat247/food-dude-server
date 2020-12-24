@@ -1,16 +1,25 @@
 import { NextFunction } from 'express';
 import { validateSchema } from './utils/validate-schema';
 import { RequestWithSession } from '../../types/request-with-session';
-import { number, string } from 'joi';
-import { addressSchema, mongoObjectIdValidator } from './utils/common-validators';
-import {CreateRestaurantBody, UpdateRestaurantBody} from '../../models/restaurant';
+import { number, object, string } from 'joi';
+import { addressSchema, mongoObjectIdValidator, partialAddressSchema } from './utils/common-validators';
+import { CreateRestaurantBody, RestaurantSearchProperties, UpdateRestaurantBody } from '../../models/restaurant';
+import { isNil, omitBy } from 'lodash';
+import { Address } from '../../types/address';
 
-const restaurantSchema = addressSchema.keys({
+const basicRestaurantSchema = object({
   name: string(),
-  description: string(),
+  description: string()
+});
+
+const restaurantSchema = basicRestaurantSchema.concat(addressSchema).keys({
   rating: number(),
   imageUrl: string().uri(),
   category: mongoObjectIdValidator
+});
+const restaurantSearchSchema = basicRestaurantSchema.concat(partialAddressSchema).keys({
+  minRating: number(),
+  category: string()
 });
 
 export const validateCreateRestaurantBody = (
@@ -23,10 +32,24 @@ export const validateCreateRestaurantBody = (
 };
 
 export const validateUpdateRestaurantBody = (
-    req: RequestWithSession<UpdateRestaurantBody>,
-    res: Response,
-    next: NextFunction
+  req: RequestWithSession<UpdateRestaurantBody>,
+  res: Response,
+  next: NextFunction
 ) => {
   validateSchema(restaurantSchema, req.body, 'optional');
+  next();
+};
+
+export const validateRestaurantSearchQueryParameters = (
+  req: RequestWithSession<any, any, RestaurantSearchProperties>,
+  res: Response,
+  next: NextFunction
+) => {
+  const { area, city, street, houseNumber, ...propertiesWithoutAddress } = req.query;
+  validateSchema(
+    restaurantSearchSchema,
+    { ...propertiesWithoutAddress, address: omitBy({ area, city, street, houseNumber } as Address, isNil) },
+    'optional'
+  );
   next();
 };

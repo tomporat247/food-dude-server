@@ -1,9 +1,10 @@
 import { NextFunction, Response } from 'express';
-import { CreateRestaurantBody, UpdateRestaurantBody } from '../models/restaurant';
+import { CreateRestaurantBody, RestaurantSearchProperties, UpdateRestaurantBody } from '../models/restaurant';
 import {
   createRestaurant,
   findAllRestaurants,
   findRestaurantById,
+  findRestaurantsForSearch,
   removeRestaurantById,
   updateRestaurantById
 } from '../db/queries/restaurant-queries';
@@ -13,7 +14,7 @@ import { findCategoryById } from '../db/queries/categroy-queries';
 
 export const getRestaurants = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const restaurants = await findAllRestaurants({ populateCategory: true }).select(['-reviews']);
+    const restaurants = await findAllRestaurants({ populateCategory: true });
     res.send(restaurants);
   } catch (e) {
     next(e);
@@ -85,6 +86,19 @@ export const removeRestaurant = async (
     } else {
       res.send(removedRestaurant);
     }
+  } catch (e) {
+    next(e);
+  }
+};
+
+export const searchRestaurants = async (
+  req: RequestWithSession<any, any, RestaurantSearchProperties>,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const searchResults = await findRestaurantsForSearch(req.query);
+    res.send(searchResults);
   } catch (e) {
     next(e);
   }

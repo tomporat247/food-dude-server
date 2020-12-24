@@ -523,7 +523,99 @@
           }
         }
       },
-      "/restaurants/{id}": {
+      "/restaurants/search": {
+        "get": {
+          "tags": ["Restaurants"],
+          "parameters": [
+            {
+              "name": "name",
+              "in": "query",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "category",
+              "in": "query",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "description",
+              "in": "query",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "minRating",
+              "in": "query",
+              "schema": {
+                "type": "number"
+              }
+            },
+            {
+              "name": "area",
+              "in": "query",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "city",
+              "in": "query",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "street",
+              "in": "query",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "houseNumber",
+              "in": "query",
+              "schema": {
+                "type": "number"
+              }
+            },
+            {
+              "name": "contributor",
+              "in": "query",
+              "schema": {
+                "type": "boolean"
+              }
+            },
+            {
+              "name": "currentlyLoggedIn",
+              "in": "query",
+              "schema": {
+                "type": "boolean"
+              }
+            }
+          ],
+          "produces": ["application/json"],
+          "responses": {
+            "200": {
+              "description": "search results",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/Restaurant"
+                }
+              }
+            },
+            "400": {
+              "description": "invalid parameters"
+            }
+          }
+        }
+      },
+      "/restaurants/search/{id}": {
         "get": {
           "tags": ["Restaurants"],
           "parameters": [

@@ -16,6 +16,10 @@ export const addressSchema = object({
   }
 });
 
+export const partialAddressSchema = addressSchema.fork(['address'], field =>
+  field.fork(['area', 'city', 'street', 'houseNumber'], innerField => innerField.optional())
+);
+
 const basicUserSchema = object({ firstName: string(), lastName: string() });
 const roleSchema = object({ role: string().valid('admin', 'viewer') });
 
@@ -28,14 +32,8 @@ export const userSchema = basicUserSchema
 
 export const userSchemaWithRole = userSchema.concat(roleSchema);
 
-export const userSearchSchema = basicUserSchema.concat(roleSchema).concat(
-  addressSchema
-    .fork(['address'], field =>
-      field.fork(['area', 'city', 'street', 'houseNumber'], innerField => innerField.optional())
-    )
-    .keys({
-      email: string(),
-      contributor: boolean(),
-      currentlyLoggedIn: boolean()
-    })
-);
+export const userSearchSchema = basicUserSchema.concat(roleSchema).concat(partialAddressSchema).keys({
+  email: string(),
+  contributor: boolean(),
+  currentlyLoggedIn: boolean()
+});
