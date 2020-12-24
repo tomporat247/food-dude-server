@@ -20,7 +20,10 @@ export type SignUpUserArguments = Omit<UpdateUserArguments, 'role'> & {
 };
 export type SignInUserArguments = Omit<Omit<Omit<SignUpUserArguments, 'address'>, 'firstName'>, 'lastName'>;
 
-export type UserSearchProperties = Partial<Omit<Omit<UpdateUserArguments, '_id'>, 'address'> & Partial<Address>> & {
-  contributor: boolean;
-  currentlyLoggedIn: boolean;
-};
+export type UserSearchProperties = Partial<
+  Omit<Omit<UpdateUserArguments, '_id'>, 'address'> &
+    Address & {
+      contributor: boolean;
+      currentlyLoggedIn: boolean;
+    }
+>;

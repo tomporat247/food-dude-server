@@ -7,3 +7,5 @@ export interface Category {
 }
 
 export interface CategoryDocument extends Category, Document {}
+
+export type CategorySearchProperties = Partial<Omit<Category, '_id'> & { minRestaurantAmount: number }>;

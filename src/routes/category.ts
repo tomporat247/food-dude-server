@@ -1,7 +1,17 @@
 import { Router } from 'express';
 import { isAdminMiddleWare } from '../middlewares/auth';
-import { validateCategoryUpdateBody, validateCreateCategoryBody } from '../middlewares/validators/category-validator';
-import { createNewCategory, getCategories, removeCategory, updateCategory } from '../controllers/category';
+import {
+  validateCategorySearchQueryParams,
+  validateCategoryUpdateBody,
+  validateCreateCategoryBody
+} from '../middlewares/validators/category-validator';
+import {
+  createNewCategory,
+  getCategories,
+  removeCategory,
+  searchCategories,
+  updateCategory
+} from '../controllers/category';
 import { getParameterObjectIdValidator } from '../middlewares/validators/common-validators';
 
 export const categoryRouter = Router();
@@ -20,3 +30,5 @@ categoryRouter.put(
 );
 //@ts-ignore
 categoryRouter.delete('/:id', isAdminMiddleWare, getParameterObjectIdValidator('id'), removeCategory);
+//@ts-ignore
+categoryRouter.get('/search', validateCategorySearchQueryParams, searchCategories);

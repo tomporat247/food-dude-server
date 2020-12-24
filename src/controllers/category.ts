@@ -3,12 +3,13 @@ import { NextFunction, Response } from 'express';
 import {
   createCategory,
   findAllCategories,
+  findCategoriesForSearch,
   findCategoryByName,
   removeCategoryById,
   updateCategoryById
 } from '../db/queries/categroy-queries';
 import { FoodDudeError } from '../models/food-dude-error';
-import { Category } from '../models/category';
+import { Category, CategorySearchProperties } from '../models/category';
 import { findRestaurantsByCategory } from '../db/queries/restaurant-queries';
 
 export const getCategories = async (req: Request, res: Response, next: NextFunction) => {
@@ -79,6 +80,19 @@ export const removeCategory = async (
     } else {
       res.send(deletedCategory);
     }
+  } catch (e) {
+    next(e);
+  }
+};
+
+export const searchCategories = async (
+  req: RequestWithSession<any, any, CategorySearchProperties>,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const searchResults = await findCategoriesForSearch(req.query);
+    res.send(searchResults);
   } catch (e) {
     next(e);
   }

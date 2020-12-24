@@ -19,5 +19,6 @@ export type UpdateRestaurantBody = Partial<CreateRestaurantBody>;
 
 export interface RestaurantDocument extends Restaurant, Document {}
 
-export type RestaurantSearchProperties = Omit<Omit<Omit<CreateRestaurantBody, 'rating'>, 'imageUrl'>, 'address'> &
-  Partial<Address> & { minRating: number };
+export type RestaurantSearchProperties = Partial<
+  Omit<Omit<Omit<CreateRestaurantBody, 'rating'>, 'imageUrl'>, 'address'> & Address & { minRating: number }
+>;

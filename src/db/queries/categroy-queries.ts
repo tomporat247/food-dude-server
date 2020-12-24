@@ -1,5 +1,9 @@
-import { Category } from '../../models/category';
+import { Category, CategoryDocument, CategorySearchProperties } from '../../models/category';
 import { CategoryModel } from '../schemas/category-schema';
+import { FilterQuery } from 'mongoose';
+import { getCaseInsensitiveContainsRegExp } from '../../utils/common-utils';
+import { isNil, omitBy } from 'lodash';
+import { RestaurantModel } from '../schemas/restaurant-schema';
 
 export const findAllCategories = () => CategoryModel.find();
 
@@ -13,3 +17,24 @@ export const removeCategoryById = (id: string) => CategoryModel.findByIdAndDelet
 
 export const updateCategoryById = (id: string, update: Partial<Category>) =>
   CategoryModel.findByIdAndUpdate(id, { $set: update }, { new: true });
+
+export const findCategoriesForSearch = async (properties: CategorySearchProperties) => {
+  let validCategoryIds = undefined;
+  if (properties.minRestaurantAmount) {
+    const categoryToRestaurantCount = await RestaurantModel.aggregate([
+      { $group: { _id: '$category', count: { $sum: 1 } } }
+    ]);
+    validCategoryIds = categoryToRestaurantCount
+      .filter(({ count }) => count >= properties.minRestaurantAmount)
+      .map(({ _id }) => _id);
+  }
+
+  const filterQuery: FilterQuery<CategoryDocument> = {
+    _id: validCategoryIds ? { $in: validCategoryIds } : undefined,
+    name: properties.name ? { $regex: getCaseInsensitiveContainsRegExp(properties.name) } : undefined,
+    description: properties.description
+      ? { $regex: getCaseInsensitiveContainsRegExp(properties.description) }
+      : undefined
+  };
+  return CategoryModel.find(omitBy(filterQuery, isNil));
+};

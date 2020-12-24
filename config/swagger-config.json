@@ -378,6 +378,49 @@
           }
         }
       },
+      "/categories/search": {
+        "get": {
+          "tags": ["Categories"],
+          "parameters": [
+            {
+              "name": "name",
+              "in": "query",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "description",
+              "in": "query",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "minRestaurantAmount",
+              "in": "query",
+              "schema": {
+                "type": "number"
+              }
+            }
+          ],
+          "produces": ["application/json"],
+          "responses": {
+            "200": {
+              "description": "search results",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/Category"
+                }
+              }
+            },
+            "400": {
+              "description": "invalid parameters"
+            }
+          }
+        }
+      },
       "/categories/{id}": {
         "put": {
           "tags": ["Categories"],
