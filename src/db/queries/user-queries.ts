@@ -2,7 +2,7 @@ import { User, UserDocument, UserSearchProperties } from '../../models/user';
 import { UserModel } from '../schemas/user-schema';
 import { FilterQuery } from 'mongoose';
 import { isNil, omitBy } from 'lodash';
-import { getCaseInsensitiveContainsRegExp } from '../../utils/common-utils';
+import { getCaseInsensitiveContainsFieldFilterQuery } from './utils/common-query-utils';
 
 export const doesUserExist = (id: string) => UserModel.exists({ _id: id });
 
@@ -20,13 +20,13 @@ export const findAndUpdateUser = (id: string, update: Partial<User>) =>
 
 export const findUsersForSearch = (properties: UserSearchProperties) => {
   const filterQuery: FilterQuery<UserDocument> = {
-    firstName: properties.firstName ? { $regex: getCaseInsensitiveContainsRegExp(properties.firstName) } : undefined,
-    lastName: properties.lastName ? { $regex: getCaseInsensitiveContainsRegExp(properties.lastName) } : undefined,
-    email: properties.email ? { $regex: getCaseInsensitiveContainsRegExp(properties.email) } : undefined,
+    firstName: getCaseInsensitiveContainsFieldFilterQuery(properties.firstName),
+    lastName: getCaseInsensitiveContainsFieldFilterQuery(properties.lastName),
+    email: getCaseInsensitiveContainsFieldFilterQuery(properties.email),
     role: properties.role || undefined,
     'address.area': properties.area || undefined,
-    'address.city': properties.city ? { $regex: getCaseInsensitiveContainsRegExp(properties.city) } : undefined,
-    'address.street': properties.street ? { $regex: getCaseInsensitiveContainsRegExp(properties.street) } : undefined,
+    'address.city': getCaseInsensitiveContainsFieldFilterQuery(properties.city),
+    'address.street': getCaseInsensitiveContainsFieldFilterQuery(properties.street),
     'address.houseNumber': +properties.houseNumber || undefined
   };
   return UserModel.find(omitBy(filterQuery, isNil));

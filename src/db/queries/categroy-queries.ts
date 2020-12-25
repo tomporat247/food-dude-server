@@ -1,9 +1,9 @@
 import { Category, CategoryDocument, CategorySearchProperties } from '../../models/category';
 import { CategoryModel } from '../schemas/category-schema';
 import { FilterQuery } from 'mongoose';
-import { getCaseInsensitiveContainsRegExp } from '../../utils/common-utils';
 import { isNil, omitBy } from 'lodash';
 import { RestaurantModel } from '../schemas/restaurant-schema';
+import { getCaseInsensitiveContainsFieldFilterQuery } from './utils/common-query-utils';
 
 export const findAllCategories = () => CategoryModel.find();
 
@@ -30,10 +30,8 @@ export const findCategoriesForSearch = async (properties: CategorySearchProperti
 
   const filterQuery: FilterQuery<CategoryDocument> = {
     _id: validCategoryIds ? { $in: validCategoryIds } : undefined,
-    name: properties.name ? { $regex: getCaseInsensitiveContainsRegExp(properties.name) } : undefined,
-    description: properties.description
-      ? { $regex: getCaseInsensitiveContainsRegExp(properties.description) }
-      : undefined
+    name: getCaseInsensitiveContainsFieldFilterQuery(properties.name),
+    description: getCaseInsensitiveContainsFieldFilterQuery(properties.description)
   };
   return CategoryModel.find(omitBy(filterQuery, isNil));
 };

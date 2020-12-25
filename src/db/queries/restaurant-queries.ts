@@ -4,6 +4,7 @@ import { ReviewModel } from '../schemas/review-schema';
 import { FilterQuery } from 'mongoose';
 import { isNil, omitBy } from 'lodash';
 import { getCaseInsensitiveContainsRegExp } from '../../utils/common-utils';
+import { getCaseInsensitiveContainsFieldFilterQuery } from './utils/common-query-utils';
 
 export const doesRestaurantExist = (id: string) => RestaurantModel.exists({ _id: id });
 
@@ -49,14 +50,12 @@ export const findRestaurantsByCategory = (category: string) => RestaurantModel.f
 
 export const findRestaurantsForSearch = (properties: RestaurantSearchProperties) => {
   const filterQuery: FilterQuery<RestaurantDocument> = {
-    name: properties.name ? { $regex: getCaseInsensitiveContainsRegExp(properties.name) } : undefined,
-    description: properties.description
-      ? { $regex: getCaseInsensitiveContainsRegExp(properties.description) }
-      : undefined,
+    name: getCaseInsensitiveContainsFieldFilterQuery(properties.name),
+    description: getCaseInsensitiveContainsFieldFilterQuery(properties.description),
     rating: properties.minRating ? { $gte: properties.minRating } : undefined,
     'address.area': properties.area || undefined,
-    'address.city': properties.city ? { $regex: getCaseInsensitiveContainsRegExp(properties.city) } : undefined,
-    'address.street': properties.street ? { $regex: getCaseInsensitiveContainsRegExp(properties.street) } : undefined,
+    'address.city': getCaseInsensitiveContainsFieldFilterQuery(properties.city),
+    'address.street': getCaseInsensitiveContainsFieldFilterQuery(properties.street),
     'address.houseNumber': +properties.houseNumber || undefined
   };
   return RestaurantModel.find(omitBy(filterQuery, isNil))
