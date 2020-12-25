@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import '../../config/init';
-import { app } from '../../app';
+import { app } from '../app';
 import * as http from 'http';
 import { get } from 'nconf';
 import { connectToDB } from '../db/connect';

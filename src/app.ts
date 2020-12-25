@@ -1,11 +1,11 @@
 import * as express from 'express';
 import * as cors from 'cors';
-import { router } from './src/routes';
+import { router } from './routes';
 import { json } from 'body-parser';
 import * as session from 'express-session';
-import { errorMiddleware } from './src/middlewares/error';
+import { errorMiddleware } from './middlewares/error';
 import { get } from 'nconf';
-import { authMiddleWare } from './src/middlewares/auth';
+import { authMiddleWare } from './middlewares/auth';
 
 export const app = express();
 
