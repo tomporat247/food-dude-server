@@ -22,11 +22,10 @@ export const findCategoriesForSearch = async (properties: CategorySearchProperti
   let validCategoryIds = undefined;
   if (properties.minRestaurantAmount) {
     const categoryToRestaurantCount = await RestaurantModel.aggregate([
-      { $group: { _id: '$category', count: { $sum: 1 } } }
+      { $group: { _id: '$category', count: { $sum: 1 } } },
+      { $match: { count: { $gte: +properties.minRestaurantAmount } } }
     ]);
-    validCategoryIds = categoryToRestaurantCount
-      .filter(({ count }) => count >= properties.minRestaurantAmount)
-      .map(({ _id }) => _id);
+    validCategoryIds = categoryToRestaurantCount.map(({ _id }) => _id);
   }
 
   const filterQuery: FilterQuery<CategoryDocument> = {
