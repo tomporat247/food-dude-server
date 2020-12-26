@@ -1,10 +1,10 @@
 import { RestaurantModel } from '../schemas/restaurant-schema';
 import { Restaurant, RestaurantDocument, RestaurantSearchProperties } from '../../models/restaurant';
-import { ReviewModel } from '../schemas/review-schema';
-import { FilterQuery } from 'mongoose';
+import { FilterQuery, Types } from 'mongoose';
 import { isNil, omitBy } from 'lodash';
 import { getCaseInsensitiveContainsRegExp } from '../../utils/common-utils';
 import { getCaseInsensitiveContainsFieldFilterQuery } from './utils/common-query-utils';
+import { deleteAllRestaurantReviews } from './review-queries';
 
 export const doesRestaurantExist = (id: string) => RestaurantModel.exists({ _id: id });
 
@@ -39,10 +39,7 @@ export const updateRestaurantById = (id: string, update: Partial<Restaurant>) =>
 
 export const removeRestaurantById = async (id: string) => {
   // TODO: User transaction with session
-  const [restaurant] = await Promise.all([
-    RestaurantModel.findByIdAndRemove(id),
-    ReviewModel.deleteMany({ restaurant: id })
-  ]);
+  const [restaurant] = await Promise.all([RestaurantModel.findByIdAndRemove(id), deleteAllRestaurantReviews(id)]);
   return restaurant;
 };
 
@@ -68,3 +65,12 @@ export const findRestaurantsForSearch = (properties: RestaurantSearchProperties)
     .select(['-reviews'])
     .then(restaurants => restaurants.filter(restaurant => restaurant.category !== null));
 };
+
+export const aggregateCategoryToRestaurantAmount = (additionalAggregators: any[] = []) =>
+  RestaurantModel.aggregate([{ $group: { _id: '$category', count: { $sum: 1 } } }, ...additionalAggregators]);
+
+export const addReviewToRestaurant = (restaurantId: string | Types.ObjectId, reviewId: string | Types.ObjectId) =>
+  RestaurantModel.updateOne({ _id: restaurantId }, { $addToSet: { reviews: reviewId } });
+
+export const removeReviewFromRestaurant = (restaurantId: string | Types.ObjectId, reviewId: string | Types.ObjectId) =>
+  RestaurantModel.updateOne({ _id: restaurantId }, { $pull: { reviews: reviewId } });

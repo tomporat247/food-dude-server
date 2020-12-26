@@ -501,6 +501,33 @@
           }
         }
       },
+      "/categories/statistics/category-to-restaurant-share": {
+        "get": {
+          "tags": ["Categories"],
+          "produces": ["application/json"],
+          "responses": {
+            "200": {
+              "description": "statistics",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "restaurantId": {
+                    "type": "object",
+                    "properties": {
+                      "percentage": {
+                        "type": "number"
+                      },
+                      "amount": {
+                        "type": "number"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
       "/restaurants": {
         "get": {
           "tags": ["Restaurants"],

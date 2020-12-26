@@ -5,6 +5,7 @@ import {
   findAllCategories,
   findCategoriesForSearch,
   findCategoryByName,
+  getCategoryToRestaurantAmount,
   removeCategoryById,
   updateCategoryById
 } from '../db/queries/categroy-queries';
@@ -93,6 +94,23 @@ export const searchCategories = async (
   try {
     const searchResults = await findCategoriesForSearch(req.query);
     res.send(searchResults);
+  } catch (e) {
+    next(e);
+  }
+};
+
+const getStatisticAnalysisFromCategoryToRestaurantAmount = (categoryToRestaurantAmount: Record<string, number>) => {
+  const totalRestaurants = Object.values(categoryToRestaurantAmount).reduce((acc, curr) => acc + curr, 0);
+  return Object.entries(categoryToRestaurantAmount).reduce((acc, [id, amount]) => {
+    acc[id] = { amount, percentage: amount / totalRestaurants };
+    return acc;
+  }, {} as Record<string, { percentage: number; amount: number }>);
+};
+
+export const getCategoryToRestaurantShare = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const categoryToRestaurantAmount = await getCategoryToRestaurantAmount();
+    res.send(getStatisticAnalysisFromCategoryToRestaurantAmount(categoryToRestaurantAmount));
   } catch (e) {
     next(e);
   }

@@ -8,6 +8,7 @@ import {
 import {
   createNewCategory,
   getCategories,
+  getCategoryToRestaurantShare,
   removeCategory,
   searchCategories,
   updateCategory
@@ -32,3 +33,5 @@ categoryRouter.put(
 categoryRouter.delete('/:id', isAdminMiddleWare, getParameterObjectIdValidator('id'), removeCategory);
 //@ts-ignore
 categoryRouter.get('/search', validateCategorySearchQueryParams, searchCategories);
+//@ts-ignore
+categoryRouter.get('/statistics/category-to-restaurant-share', getCategoryToRestaurantShare);
