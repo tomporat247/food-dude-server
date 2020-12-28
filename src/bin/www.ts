@@ -5,6 +5,7 @@ import { app } from '../app';
 import * as http from 'http';
 import { get } from 'nconf';
 import { connectToDB } from '../db/connect';
+import { setupWebsocketServer } from '../websocket-app';
 
 const port = normalizePort(process.env.PORT || get('port') || '3000');
 let server: http.Server;
@@ -15,6 +16,7 @@ const runServer = async () => {
   await connectToDB();
 
   server = http.createServer(app);
+  setupWebsocketServer(server);
   server.listen(port);
   server.on('error', onError);
   server.on('listening', onListening);
