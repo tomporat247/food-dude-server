@@ -7,7 +7,7 @@ import { CreateRestaurantBody, RestaurantSearchProperties, UpdateRestaurantBody 
 import { isNil, omitBy } from 'lodash';
 import { Address } from '../../types/address';
 
-const ratingValidator = number().integer().min(0).max(5);
+const ratingValidator = number().integer().min(1).max(5);
 
 const basicRestaurantSchema = object({
   name: string(),
