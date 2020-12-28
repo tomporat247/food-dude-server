@@ -7,18 +7,20 @@ import { CreateRestaurantBody, RestaurantSearchProperties, UpdateRestaurantBody 
 import { isNil, omitBy } from 'lodash';
 import { Address } from '../../types/address';
 
+const ratingValidator = number().integer().min(0).max(5);
+
 const basicRestaurantSchema = object({
   name: string(),
   description: string()
 });
 
 const restaurantSchema = basicRestaurantSchema.concat(addressSchema).keys({
-  rating: number(),
+  rating: ratingValidator,
   imageUrl: string().uri(),
   category: mongoObjectIdValidator
 });
 const restaurantSearchSchema = basicRestaurantSchema.concat(partialAddressSchema).keys({
-  minRating: number(),
+  minRating: ratingValidator,
   category: string()
 });
 

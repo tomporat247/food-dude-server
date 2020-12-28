@@ -1052,7 +1052,7 @@
           "_id": "xxx",
           "name": "KFC",
           "description": "fried chicken goodies",
-          "rating": "10",
+          "rating": 5,
           "imageUrl": "https://some-link",
           "address": { "area": "center", "city": "Tel Aviv", "street": "Hashalom", "houseNumber": 1 },
           "category": "some category",
