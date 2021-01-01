@@ -9,7 +9,8 @@ import {
 import { WebsocketEvent } from './types/websocket-events';
 
 export const setupWebsocketServer = (server: http.Server) => {
-  const emitConnectedUsersChange = () => io.emit(WebsocketEvent.CONNECTED_USERS, getConnectedUsersDisplayData());
+  const emitConnectedUsersChange = () =>
+    io.emit(WebsocketEvent.CONNECTED_USERS, getConnectedUsersDisplayData({ unique: true }));
 
   // @ts-ignore
   const io: socketIo.Server = socketIo(server, { cors: { origin: '*' } });

@@ -7,7 +7,7 @@ export const addToConnectedUsers = (socketId: string, user: User) => (socketIdTo
 
 export const removeFromConnectedUsers = (socketId: string) => delete socketIdToUser[socketId];
 
-export const getConnectedUsersDisplayData = (unique = true): Array<Partial<User>> => {
+export const getConnectedUsersDisplayData = ({ unique }: { unique: boolean }): Array<Partial<User>> => {
   const connectedUsers = Object.values(socketIdToUser).map(({ _id, email }) => ({ _id, email }));
   return unique ? uniqBy(connectedUsers, '_id') : connectedUsers;
 };
