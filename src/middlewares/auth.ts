@@ -1,15 +1,12 @@
-import { verify } from 'jsonwebtoken';
 import { RequestWithSession } from '../types/request-with-session';
 import { NextFunction, Response } from 'express';
 import { FoodDudeError } from '../models/food-dude-error';
 import { isCurrentUserAdmin } from '../utils/user-utils';
-import { get } from 'nconf';
-
-const accessTokenSecret = get('auth:secret');
+import { verifyAndDecodeToken } from '../utils/auth-utils';
 
 const routePrefixesToIgnore = ['/api-docs', '/auth'];
 
-export const authMiddleWare = (req: RequestWithSession, res: Response, next: NextFunction) => {
+export const authMiddleWare = async (req: RequestWithSession, res: Response, next: NextFunction) => {
   req.session.user = null;
   if (routePrefixesToIgnore.findIndex(routePrefix => req.url.startsWith(routePrefix)) === -1) {
     const authHeader = req.headers.authorization;
@@ -17,14 +14,12 @@ export const authMiddleWare = (req: RequestWithSession, res: Response, next: Nex
     if (authHeader) {
       const token = authHeader.split(' ')[1];
 
-      verify(token, accessTokenSecret, async (err, user) => {
-        if (err) {
-          next(new FoodDudeError('auth error', 403));
-        } else {
-          req.session.user = user;
-          next();
-        }
-      });
+      try {
+        req.session.user = await verifyAndDecodeToken(token);
+        next();
+      } catch (e) {
+        next(e);
+      }
     } else {
       next(new FoodDudeError('auth error - no "authorization" header in request', 401));
     }
