@@ -11,3 +11,6 @@ export const getConnectedUsersDisplayData = (unique = true): Array<Partial<User>
   const connectedUsers = Object.values(socketIdToUser).map(({ _id, email }) => ({ _id, email }));
   return unique ? uniqBy(connectedUsers, '_id') : connectedUsers;
 };
+
+export const getConnectedUserIds = (): Set<string> =>
+  new Set<string>(Object.values(socketIdToUser).map(({ _id }) => _id));

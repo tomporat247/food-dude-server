@@ -4,6 +4,7 @@ import { findAndUpdateUser, findUserById, findUsersForSearch, getAllUsers } from
 import { FoodDudeError } from '../models/food-dude-error';
 import { getUserWithoutPrivateData } from '../utils/user-utils';
 import { UpdateUserArguments, UserSearchProperties } from '../models/user';
+import { getConnectedUserIds } from '../utils/connected-users-manager';
 
 export const getUsers = async (req: RequestWithSession<any, { email: string }>, res: Response, next: NextFunction) => {
   try {
@@ -56,7 +57,10 @@ export const searchUsers = async (
   next: NextFunction
 ) => {
   try {
-    const searchResults = await findUsersForSearch(req.query);
+    const searchResults = await findUsersForSearch(
+      req.query,
+      req.query.currentlyLoggedIn ? Array.from(getConnectedUserIds()) : undefined
+    );
     res.send(searchResults);
   } catch (e) {
     next(e);

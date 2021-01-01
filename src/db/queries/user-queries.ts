@@ -18,8 +18,9 @@ export const findUserById = (id: string) => UserModel.findById(id);
 export const findAndUpdateUser = (id: string, update: Partial<User>) =>
   UserModel.findByIdAndUpdate(id, { $set: update }, { new: true });
 
-export const findUsersForSearch = (properties: UserSearchProperties) => {
+export const findUsersForSearch = (properties: UserSearchProperties, connectedUserIds?: string[]) => {
   const filterQuery: FilterQuery<UserDocument> = {
+    _id: properties.currentlyLoggedIn ? { $in: connectedUserIds } : undefined,
     firstName: getCaseInsensitiveContainsFieldFilterQuery(properties.firstName),
     lastName: getCaseInsensitiveContainsFieldFilterQuery(properties.lastName),
     email: getCaseInsensitiveContainsFieldFilterQuery(properties.email),
