@@ -1,10 +1,16 @@
 import * as socketIo from 'socket.io';
 import * as http from 'http';
 import { verifyAndDecodeToken } from './utils/auth-utils';
-import { addToConnectedUsers, removeFromConnectedUsers } from './utils/connected-users-manager';
+import {
+  addToConnectedUsers,
+  getConnectedUsersDisplayData,
+  removeFromConnectedUsers
+} from './utils/connected-users-manager';
 import { WebsocketEvent } from './types/websocket-events';
 
 export const setupWebsocketServer = (server: http.Server) => {
+  const emitConnectedUsersChange = () => io.emit(WebsocketEvent.CONNECTED_USERS, getConnectedUsersDisplayData());
+
   // @ts-ignore
   const io: socketIo.Server = socketIo(server, { cors: { origin: '*' } });
 
@@ -13,9 +19,13 @@ export const setupWebsocketServer = (server: http.Server) => {
     const token = socket.handshake.query.token;
     try {
       const user = await verifyAndDecodeToken(token);
-      addToConnectedUsers(user, socket.id);
+      addToConnectedUsers(socket.id, user);
+      emitConnectedUsersChange();
 
-      socket.on('disconnect', () => removeFromConnectedUsers(user._id));
+      socket.on('disconnect', () => {
+        removeFromConnectedUsers(socket.id);
+        emitConnectedUsersChange();
+      });
     } catch (e) {
       socket.emit(WebsocketEvent.AUTH_ERROR, `invalid user token: "${token}"`);
       socket.disconnect(true);
