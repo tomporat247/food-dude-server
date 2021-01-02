@@ -22,7 +22,7 @@ export const validateUserSearchQueryParameters = (
   next: NextFunction
 ) => {
   const { area, city, street, houseNumber, ...propertiesWithoutAddress } = req.query;
-  validateSchema(
+  req.query = validateSchema(
     userSearchSchema,
     { ...propertiesWithoutAddress, address: omitBy({ area, city, street, houseNumber } as Address, isNil) },
     'optional'

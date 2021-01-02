@@ -30,6 +30,6 @@ export const validateCategorySearchQueryParams = (
   res: Response,
   next: NextFunction
 ) => {
-  validateSchema(categorySearchSchema, req.query, 'optional');
+  req.query = validateSchema(categorySearchSchema, req.query, 'optional');
   next();
 };
