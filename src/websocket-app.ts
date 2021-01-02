@@ -7,29 +7,50 @@ import {
   removeFromConnectedUsers
 } from './utils/connected-users-manager';
 import { WebsocketEvent } from './types/websocket-events';
+import { User } from './models/user';
+import { WebsocketRoom } from './types/websocket-rooms';
+
+let io: socketIo.Server;
+
+const emitConnectedUsersChange = () =>
+  io.to(WebsocketRoom.ADMIN).emit(WebsocketEvent.CONNECTED_USERS, getConnectedUsersDisplayData({ unique: true }));
+
+const addSocketToRelevantRooms = (socket: socketIo.Socket, user: User) => {
+  if (user.role === 'admin') {
+    socket.join(WebsocketRoom.ADMIN);
+  }
+};
+
+const onUserConnected = (socket: socketIo.Socket, user: User) => {
+  addSocketToRelevantRooms(socket, user);
+  addToConnectedUsers(socket.id, user);
+  emitConnectedUsersChange();
+};
+
+const onUserDisconnected = (socket: socketIo.Socket) => {
+  removeFromConnectedUsers(socket.id);
+  emitConnectedUsersChange();
+};
+
+const onAuthError = (socket: socketIo.Socket, givenToken: string) => {
+  socket.emit(WebsocketEvent.AUTH_ERROR, `invalid user token: "${givenToken}"`);
+  socket.disconnect(true);
+};
 
 export const setupWebsocketServer = (server: http.Server) => {
-  const emitConnectedUsersChange = () =>
-    io.emit(WebsocketEvent.CONNECTED_USERS, getConnectedUsersDisplayData({ unique: true }));
-
   // @ts-ignore
-  const io: socketIo.Server = socketIo(server, { cors: { origin: '*' } });
+  io = socketIo(server, { cors: { origin: '*' } });
 
   io.on('connection', async (socket: socketIo.Socket) => {
     // @ts-ignore
-    const token = socket.handshake.query.token;
+    const token = socket.handshake?.query?.token;
     try {
       const user = await verifyAndDecodeToken(token);
-      addToConnectedUsers(socket.id, user);
-      emitConnectedUsersChange();
+      onUserConnected(socket, user);
 
-      socket.on('disconnect', () => {
-        removeFromConnectedUsers(socket.id);
-        emitConnectedUsersChange();
-      });
+      socket.on('disconnect', () => onUserDisconnected(socket));
     } catch (e) {
-      socket.emit(WebsocketEvent.AUTH_ERROR, `invalid user token: "${token}"`);
-      socket.disconnect(true);
+      onAuthError(socket, token);
     }
   });
 };
