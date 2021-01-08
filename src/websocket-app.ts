@@ -6,14 +6,39 @@ import {
   getConnectedUsersDisplayData,
   removeFromConnectedUsers
 } from './utils/connected-users-manager';
-import { WebsocketEvent } from './types/websocket-events';
+import { WebsocketClientEvent, WebsocketServerEvent } from './types/websocket-events';
 import { User } from './models/user';
 import { WebsocketRoom } from './types/websocket-rooms';
+import { findRestaurantById } from './db/queries/restaurant-queries';
+import { validateObjectId } from './middlewares/validators/common-validators';
+import { RestaurantDocument } from './models/restaurant';
 
 let io: socketIo.Server;
 
+const validateId = (id: string, socket: socketIo.Socket): boolean => {
+  try {
+    validateObjectId(id);
+    return true;
+  } catch (e) {
+    socket.emit(WebsocketServerEvent.INPUT_ERROR, `invalid id: ${id}`);
+    return false;
+  }
+};
+
+const verifyAdmin = (socket: socketIo.Socket, user: User, onErrorArgs: any) => {
+  if (user.role !== 'admin') {
+    socket.emit(WebsocketServerEvent.ONLY_ADMIN_PERMITTED, onErrorArgs);
+    throw new Error(`${WebsocketServerEvent.ONLY_ADMIN_PERMITTED}: args: ${JSON.stringify(onErrorArgs)}`);
+  }
+};
+
 const emitConnectedUsersChange = () =>
-  io.to(WebsocketRoom.ADMIN).emit(WebsocketEvent.CONNECTED_USERS, getConnectedUsersDisplayData({ unique: true }));
+  io.to(WebsocketRoom.ADMIN).emit(WebsocketServerEvent.CONNECTED_USERS, getConnectedUsersDisplayData({ unique: true }));
+
+const emitBlockRestaurantReviewsChanged = (restaurantId: string, reviewsBlocked: boolean) =>
+  io
+    .to(WebsocketRoom.ADMIN)
+    .emit(WebsocketServerEvent.BLOCK_RESTAURANT_REVIEWS_CHANGED, { restaurantId, reviewsBlocked });
 
 const addSocketToRelevantRooms = (socket: socketIo.Socket, user: User) => {
   if (user.role === 'admin') {
@@ -32,8 +57,35 @@ const onUserDisconnected = (socket: socketIo.Socket) => {
   emitConnectedUsersChange();
 };
 
+const updateRestaurantReviewsBlocked = async (restaurant: RestaurantDocument, block: boolean) => {
+  restaurant.reviewsBlocked = block;
+  await restaurant.save();
+  emitBlockRestaurantReviewsChanged(restaurant._id.toString(), block);
+};
+
+const onBlockRestaurantReviewsChange = async (
+  socket: socketIo.Socket,
+  user: User,
+  restaurantId: string,
+  block: boolean
+) => {
+  if (validateId(restaurantId, socket)) {
+    try {
+      verifyAdmin(socket, user, { onEvent: WebsocketClientEvent.CHANGE_BLOCK_RESTAURANT_REVIEWS });
+      const restaurant = await findRestaurantById(restaurantId);
+      if (restaurant === null) {
+        socket.emit(WebsocketServerEvent.INPUT_ERROR, `no restaurant found for id: ${restaurantId}`);
+      } else if (restaurant.reviewsBlocked !== block) {
+        await updateRestaurantReviewsBlocked(restaurant, block);
+      }
+    } catch (e) {
+      socket.emit(WebsocketServerEvent.INTERNAL_SERVER_ERROR);
+    }
+  }
+};
+
 const onAuthError = (socket: socketIo.Socket, givenToken: string) => {
-  socket.emit(WebsocketEvent.AUTH_ERROR, `invalid user token: "${givenToken}"`);
+  socket.emit(WebsocketServerEvent.AUTH_ERROR, `invalid user token: "${givenToken}"`);
   socket.disconnect(true);
 };
 
@@ -47,6 +99,12 @@ export const setupWebsocketServer = (server: http.Server) => {
     try {
       const user = await verifyAndDecodeToken(token);
       onUserConnected(socket, user);
+
+      socket.on(
+        WebsocketClientEvent.CHANGE_BLOCK_RESTAURANT_REVIEWS,
+        ({ restaurantId, block }: { restaurantId: string; block: boolean }) =>
+          onBlockRestaurantReviewsChange(socket, user, restaurantId, block)
+      );
 
       socket.on('disconnect', () => onUserDisconnected(socket));
     } catch (e) {

@@ -6,7 +6,9 @@ import { object } from 'joi';
 
 const objectIdSchema = object({ id: mongoObjectIdValidator });
 
-const validateObjectIds = (ids: string[]) => ids.forEach(id => validateSchema(objectIdSchema, { id }, 'required'));
+export const validateObjectId = (id: string) => validateSchema(objectIdSchema, { id }, 'required');
+
+const validateObjectIds = (ids: string[]) => ids.forEach(id => validateObjectId(id));
 
 export const getParameterObjectIdValidator = (properties: string[] | string) => (
   req: RequestWithSession,
