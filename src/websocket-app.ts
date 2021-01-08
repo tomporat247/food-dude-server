@@ -36,9 +36,7 @@ const emitConnectedUsersChange = () =>
   io.to(WebsocketRoom.ADMIN).emit(WebsocketServerEvent.CONNECTED_USERS, getConnectedUsersDisplayData({ unique: true }));
 
 const emitBlockRestaurantReviewsChanged = (restaurantId: string, reviewsBlocked: boolean) =>
-  io
-    .to(WebsocketRoom.ADMIN)
-    .emit(WebsocketServerEvent.BLOCK_RESTAURANT_REVIEWS_CHANGED, { restaurantId, reviewsBlocked });
+  io.emit(WebsocketServerEvent.BLOCK_RESTAURANT_REVIEWS_CHANGED, { restaurantId, reviewsBlocked });
 
 const addSocketToRelevantRooms = (socket: socketIo.Socket, user: User) => {
   if (user.role === 'admin') {
