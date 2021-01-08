@@ -10,7 +10,8 @@ const restaurantSchema: Schema<Restaurant> = new Schema(
     address: { type: addressSchemaType, required: true },
     imageUrl: { type: String, required: true },
     category: { type: Schema.Types.ObjectId, ref: 'Category', required: true },
-    reviews: [{ type: Schema.Types.ObjectId, ref: 'Review', required: true }]
+    reviews: [{ type: Schema.Types.ObjectId, ref: 'Review', required: true }],
+    reviewsBlocked: { type: Boolean, required: true }
   },
   {
     versionKey: false

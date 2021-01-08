@@ -1,5 +1,10 @@
 import { NextFunction, Response } from 'express';
-import { CreateRestaurantBody, RestaurantSearchProperties, UpdateRestaurantBody } from '../models/restaurant';
+import {
+  CreateRestaurantBody,
+  Restaurant,
+  RestaurantSearchProperties,
+  UpdateRestaurantBody
+} from '../models/restaurant';
 import {
   createRestaurant,
   findAllRestaurants,
@@ -48,7 +53,7 @@ export const createNewRestaurant = async (
     if (category === null) {
       next(new FoodDudeError('invalid category', 400));
     } else {
-      const restaurantToCreate = { ...req.body, reviews: [] };
+      const restaurantToCreate: Restaurant = { ...req.body, reviews: [], reviewsBlocked: false };
       const createdRestaurant = await createRestaurant(restaurantToCreate);
       res.send(createdRestaurant);
     }

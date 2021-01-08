@@ -8,6 +8,8 @@ export const findReviews = ({ restaurantId, userId }: { restaurantId: string; us
   return ReviewModel.find(filters).populate('user');
 };
 
+export const findPopulatedReview = (reviewId: string) => ReviewModel.findById(reviewId).populate('user').populate( 'restaurant')
+
 export const createReview = async (review: Review) => {
   // TODO: Use transaction with session
   const createdReview = await ReviewModel.create(review);

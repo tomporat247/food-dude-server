@@ -12,9 +12,10 @@ export interface Restaurant {
   imageUrl: string;
   category: Types.ObjectId | Category | string;
   reviews: Types.ObjectId[] | Review[] | string[];
+  reviewsBlocked: boolean;
 }
 
-export type CreateRestaurantBody = Omit<Omit<Restaurant, '_id'>, 'reviews'>;
+export type CreateRestaurantBody = Omit<Omit<Omit<Restaurant, '_id'>, 'reviews'>, 'reviewsBlocked'>;
 export type UpdateRestaurantBody = Partial<CreateRestaurantBody>;
 
 export interface RestaurantDocument extends Restaurant, Document {}

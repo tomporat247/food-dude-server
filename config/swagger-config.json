@@ -883,6 +883,9 @@
             "400": {
               "description": "invalid parameters"
             },
+            "403": {
+              "description": "restaurant's reviews blocked"
+            },
             "404": {
               "description": "not restaurant with given id exists"
             }
@@ -926,6 +929,9 @@
             "400": {
               "description": "invalid parameters"
             },
+            "403": {
+              "description": "restaurant's reviews blocked"
+            },
             "404": {
               "description": "not review with given id exists"
             }
@@ -953,6 +959,9 @@
             },
             "400": {
               "description": "invalid parameters"
+            },
+            "403": {
+              "description": "restaurant's reviews blocked"
             },
             "404": {
               "description": "not review with given id exists"
@@ -1046,6 +1055,9 @@
             "items": {
               "$ref": "#/definitions/Review"
             }
+          },
+          "reviewsBlocked": {
+            "type": "boolean"
           }
         },
         "example": {
