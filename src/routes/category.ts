@@ -34,4 +34,4 @@ categoryRouter.delete('/:id', isAdminMiddleWare, getParameterObjectIdValidator('
 //@ts-ignore
 categoryRouter.get('/search', validateCategorySearchQueryParams, searchCategories);
 //@ts-ignore
-categoryRouter.get('/statistics/category-to-restaurant-share', getCategoryToRestaurantShare);
+categoryRouter.get('/statistics/category-to-restaurant-share', isAdminMiddleWare, getCategoryToRestaurantShare);

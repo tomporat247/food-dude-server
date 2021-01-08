@@ -524,6 +524,9 @@
                   }
                 }
               }
+            },
+            "401": {
+              "description": "only admin is permitted to this action"
             }
           }
         }
