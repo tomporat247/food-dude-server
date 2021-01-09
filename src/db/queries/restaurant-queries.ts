@@ -5,6 +5,7 @@ import { isNil, omitBy } from 'lodash';
 import { getCaseInsensitiveContainsRegExp } from '../../utils/common-utils';
 import { getCaseInsensitiveContainsFieldFilterQuery } from './utils/common-query-utils';
 import { deleteAllRestaurantReviews } from './review-queries';
+import { Address } from '../../types/address';
 
 export const doesRestaurantExist = (id: string) => RestaurantModel.exists({ _id: id });
 
@@ -48,15 +49,15 @@ export const removeRestaurantById = async (id: string) => {
 
 export const findRestaurantsByCategory = (category: string) => RestaurantModel.find({ category });
 
-export const findRestaurantsForSearch = (properties: RestaurantSearchProperties) => {
+export const findRestaurantsForSearch = (properties: RestaurantSearchProperties & { address?: Address }) => {
   const filterQuery: FilterQuery<RestaurantDocument> = {
     name: getCaseInsensitiveContainsFieldFilterQuery(properties.name),
     description: getCaseInsensitiveContainsFieldFilterQuery(properties.description),
     rating: properties.minRating ? { $gte: properties.minRating } : undefined,
-    'address.area': properties.area || undefined,
-    'address.city': getCaseInsensitiveContainsFieldFilterQuery(properties.city),
-    'address.street': getCaseInsensitiveContainsFieldFilterQuery(properties.street),
-    'address.houseNumber': +properties.houseNumber || undefined
+    'address.area': properties?.address?.area || undefined,
+    'address.city': getCaseInsensitiveContainsFieldFilterQuery(properties?.address?.city),
+    'address.street': getCaseInsensitiveContainsFieldFilterQuery(properties?.address?.street),
+    'address.houseNumber': +properties?.address?.houseNumber || undefined
   };
   return RestaurantModel.find(omitBy(filterQuery, isNil))
     .populate({
