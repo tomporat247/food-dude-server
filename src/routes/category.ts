@@ -8,6 +8,7 @@ import {
 import {
   createNewCategory,
   getCategories,
+  getCategoryToAverageRating,
   getCategoryToRestaurantShare,
   removeCategory,
   searchCategories,
@@ -35,3 +36,5 @@ categoryRouter.delete('/:id', isAdminMiddleWare, getParameterObjectIdValidator('
 categoryRouter.get('/search', validateCategorySearchQueryParams, searchCategories);
 //@ts-ignore
 categoryRouter.get('/statistics/category-to-restaurant-share', isAdminMiddleWare, getCategoryToRestaurantShare);
+//@ts-ignore
+categoryRouter.get('/statistics/category-to-average-rating', isAdminMiddleWare, getCategoryToAverageRating);

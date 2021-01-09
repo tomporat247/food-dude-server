@@ -531,6 +531,28 @@
           }
         }
       },
+      "/categories/statistics/category-to-average-rating": {
+        "get": {
+          "tags": ["Categories"],
+          "produces": ["application/json"],
+          "responses": {
+            "200": {
+              "description": "statistics",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "categoryId": {
+                    "type": "number"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "only admin is permitted to this action"
+            }
+          }
+        }
+      },
       "/restaurants": {
         "get": {
           "tags": ["Restaurants"],

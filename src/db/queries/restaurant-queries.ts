@@ -77,3 +77,15 @@ export const addReviewToRestaurant = (restaurantId: string | Types.ObjectId, rev
 
 export const removeReviewFromRestaurant = (restaurantId: string | Types.ObjectId, reviewId: string | Types.ObjectId) =>
   RestaurantModel.updateOne({ _id: restaurantId }, { $pull: { reviews: reviewId } });
+
+export const getCategoryToAverageRestaurantRating = (): Promise<Record<string, number>> =>
+  RestaurantModel.aggregate([{ $group: { _id: '$category', averageRating: { $avg: '$rating' } } }]).then(result =>
+    result.reduce((acc, { _id, averageRating }) => {
+      acc[_id.toString()] = averageRating;
+      return acc;
+    }, {})
+  );
+// RestaurantModel.mapReduce({
+//   map: 'category',
+//   reduce: (key, restaurants) => mean(restaurants.map(restaurant => restaurant.rating))
+// });

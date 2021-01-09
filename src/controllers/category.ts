@@ -11,7 +11,7 @@ import {
 } from '../db/queries/categroy-queries';
 import { FoodDudeError } from '../models/food-dude-error';
 import { Category, CategorySearchProperties } from '../models/category';
-import { findRestaurantsByCategory } from '../db/queries/restaurant-queries';
+import { findRestaurantsByCategory, getCategoryToAverageRestaurantRating } from '../db/queries/restaurant-queries';
 
 export const getCategories = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -111,6 +111,15 @@ export const getCategoryToRestaurantShare = async (req: Request, res: Response, 
   try {
     const categoryToRestaurantAmount = await getCategoryToRestaurantAmount();
     res.send(getStatisticAnalysisFromCategoryToRestaurantAmount(categoryToRestaurantAmount));
+  } catch (e) {
+    next(e);
+  }
+};
+
+export const getCategoryToAverageRating = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const categoryToAverageRating = await getCategoryToAverageRestaurantRating();
+    res.send(categoryToAverageRating);
   } catch (e) {
     next(e);
   }
