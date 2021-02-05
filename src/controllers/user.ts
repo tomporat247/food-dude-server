@@ -47,7 +47,11 @@ export const updateUser = async (
     }
     res.send(getUserWithoutPrivateData(updatedUser));
   } catch (e) {
-    next(e);
+    next(
+      e?.code === 11000
+        ? new FoodDudeError(`Received duplicate key for field "${Object.keys(e.keyPattern)[0]}"`, 400)
+        : e
+    );
   }
 };
 

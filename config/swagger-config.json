@@ -1093,7 +1093,8 @@
           "imageUrl": "https://some-link",
           "address": { "area": "center", "city": "Tel Aviv", "street": "Hashalom", "houseNumber": 1 },
           "category": "some category",
-          "reviews": ["review 1", "review 2"]
+          "reviews": ["review 1", "review 2"],
+          "reviewsBlocked": false
         }
       },
       "Review": {
