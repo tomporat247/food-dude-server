@@ -68,11 +68,12 @@ export const updateRestaurant = async (
   next: NextFunction
 ) => {
   try {
-    const updatedRestaurant = await updateRestaurantById(req.params.id, req.body);
+    const updatedRestaurant = await updateRestaurantById(req.params.id, req.body).lean();
     if (updatedRestaurant === null) {
       next(new FoodDudeError(`could not find restaurant with id: ${req.params.id}`, 404));
     } else {
-      res.send(updatedRestaurant);
+      const category = await findCategoryById(updatedRestaurant.category as string).lean();
+      res.send({ ...updatedRestaurant, category });
     }
   } catch (e) {
     next(e);
