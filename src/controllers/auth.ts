@@ -24,11 +24,15 @@ export const register = async (req: RequestWithSession<SignUpUserArguments>, res
   }
 };
 
-export const login = async (req: RequestWithSession<SignInUserArguments>, res: Response, next: NextFunction) => {
+export const login = async (
+  req: RequestWithSession<SignInUserArguments, any, { onlyAdmin?: boolean }>,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { email, password } = req.body;
     const user = await findUserByEmailAndPassword(email, objectHash(password));
-    if (user === null) {
+    if (user === null || (req.query.onlyAdmin && user.role !== 'admin')) {
       next(new FoodDudeError('no match for user with given credentials', 404));
     } else {
       res.send(generateAccessToken(user));
