@@ -32,8 +32,10 @@ export const login = async (
   try {
     const { email, password } = req.body;
     const user = await findUserByEmailAndPassword(email, objectHash(password));
-    if (user === null || (req.query.onlyAdmin && user.role !== 'admin')) {
+    if (user === null) {
       next(new FoodDudeError('no match for user with given credentials', 404));
+    } else if (req.query.onlyAdmin && user.role !== 'admin'){
+      next(new FoodDudeError('user does not possess admin privileges', 401));
     } else {
       res.send(generateAccessToken(user));
     }
