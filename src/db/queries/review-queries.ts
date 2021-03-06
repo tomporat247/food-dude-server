@@ -3,9 +3,11 @@ import { ReviewModel } from '../schemas/review-schema';
 import { Review } from '../../models/review';
 import { addReviewToRestaurant, removeReviewFromRestaurant } from './restaurant-queries';
 
-export const findReviews = ({ restaurantId, userId }: { restaurantId?: string; userId?: string }) => {
-  const filters = omitBy({ restaurant: restaurantId, user: userId }, isNil);
-  return ReviewModel.find(filters).populate('user');
+export const findReviews = ({ restaurantName }: { restaurantName?: string }) => {
+  // const relevantRestaurantIds: string[] | undefined = undefined;
+  // const filters = omitBy({ restaurant: restaurantId }, isNil);
+  // return ReviewModel.find(filters).populate('user');
+  return ReviewModel.find().populate('user')
 };
 
 export const findPopulatedReview = (reviewId: string) =>
@@ -34,6 +36,4 @@ export const deleteAllRestaurantReviews = (restaurantId: string) =>
   ReviewModel.deleteMany({ restaurant: restaurantId });
 
 export const getUserIdsWithReviews = (): Promise<string[]> =>
-  ReviewModel.find()
-    .select('_id')
-    .then(userDocuments => userDocuments.map(userDocument => userDocument._id.toString()));
+  ReviewModel.distinct('user').then(docs => docs.map(doc => doc.toString()));

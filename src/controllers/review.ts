@@ -7,9 +7,8 @@ import {
   removeReviewById,
   updateReviewById
 } from '../db/queries/review-queries';
-import { doesRestaurantExist, findRestaurantById } from '../db/queries/restaurant-queries';
+import { findRestaurantById } from '../db/queries/restaurant-queries';
 import { FoodDudeError } from '../models/food-dude-error';
-import { doesUserExist } from '../db/queries/user-queries';
 import { Review } from '../models/review';
 import { Restaurant } from '../models/restaurant';
 
@@ -20,25 +19,14 @@ const validateRestaurantReviewsNotBlocked = (restaurant: Restaurant) => {
 };
 
 export const getReviews = async (
-  req: RequestWithSession<any, any, { restaurantId: string; userId: string }>,
+  req: RequestWithSession<any, any, { restaurantName: string }>,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const restaurantId = req.query.restaurantId;
-    const userId = req.query.userId;
-
-    const restaurantExists = !restaurantId || (await doesRestaurantExist(restaurantId));
-    const userExists = !userId || (await doesUserExist(userId));
-
-    if (!restaurantExists) {
-      next(new FoodDudeError(`restaurant with id "${restaurantId}" does not exist`, 404));
-    } else if (!userExists) {
-      next(new FoodDudeError(`user with id "${restaurantId}" does not exist`, 404));
-    } else {
-      const reviews = await findReviews({ restaurantId, userId });
-      res.send(reviews);
-    }
+    const restaurantName = req.query.restaurantName;
+    const reviews = await findReviews({ restaurantName });
+    res.send(reviews);
   } catch (e) {
     next(e);
   }
