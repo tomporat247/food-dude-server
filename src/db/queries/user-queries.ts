@@ -24,14 +24,17 @@ export const findUsersForSearch = async (
   properties: UserSearchProperties & { address?: Address },
   connectedUserIds?: string[]
 ) => {
-  const relevantUserIds: string[] = connectedUserIds ? [...connectedUserIds] : [];
+  const relevantUserIds: string[] = [];
+  if (properties.currentlyLoggedIn) {
+    relevantUserIds.push(...connectedUserIds);
+  }
   if (properties.contributor) {
     const contributorUserIds = await getUserIdsWithReviews();
     relevantUserIds.push(...contributorUserIds);
   }
 
   const filterQuery: FilterQuery<UserDocument> = {
-    _id: properties.currentlyLoggedIn || properties.contributor ? { $in: relevantUserIds } : undefined,
+    _id: relevantUserIds.length > 0 ? { $in: relevantUserIds } : undefined,
     firstName: getCaseInsensitiveContainsFieldFilterQuery(properties.firstName),
     lastName: getCaseInsensitiveContainsFieldFilterQuery(properties.lastName),
     email: getCaseInsensitiveContainsFieldFilterQuery(properties.email),
