@@ -23,11 +23,11 @@ export const createReview = async (review: Review) => {
   // TODO: Use transaction with session
   const createdReview = await ReviewModel.create(review);
   await addReviewToRestaurant(review.restaurant as string, createdReview._id);
-  return createdReview;
+  return findPopulatedReview(createdReview._id);
 };
 
 export const updateReviewById = (id: string, update: Partial<Review>) =>
-  ReviewModel.findByIdAndUpdate(id, { $set: update }, { new: true });
+  ReviewModel.findByIdAndUpdate(id, { $set: update }, { new: true }).populate('user').populate('restaurant');
 
 export const removeReviewById = async (id: string) => {
   // TODO: Use transaction with session
