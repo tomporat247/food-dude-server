@@ -11,10 +11,17 @@ import { findRestaurantById } from '../db/queries/restaurant-queries';
 import { FoodDudeError } from '../models/food-dude-error';
 import { Review } from '../models/review';
 import { Restaurant } from '../models/restaurant';
+import { User } from '../models/user';
 
 const validateRestaurantReviewsNotBlocked = (restaurant: Restaurant) => {
   if (restaurant.reviewsBlocked) {
     throw new FoodDudeError('restaurants reviews are blocked', 403);
+  }
+};
+
+const validateCurrentUserOrAdmin = (user: User, review: Review) => {
+  if (user.role !== 'admin' && (review.user as User)._id.toString() !== user._id.toString()) {
+    throw new FoodDudeError('only an admin or the user that created the review are allowed to do this action', 403);
   }
 };
 
@@ -59,7 +66,6 @@ export const addReview = async (
   }
 };
 
-// TODO: Let only an admin or the owner to execute this
 export const updateReview = async (
   req: RequestWithSession<Partial<Review>, { id: string }>,
   res: Response,
@@ -67,6 +73,7 @@ export const updateReview = async (
 ) => {
   try {
     const currentReview = await findPopulatedReview(req.params.id);
+    validateCurrentUserOrAdmin(req.session.user, currentReview);
     validateRestaurantReviewsNotBlocked(currentReview.restaurant as Restaurant);
     const updatedReview = await updateReviewById(req.params.id, req.body);
     if (updatedReview === null) {
@@ -79,10 +86,10 @@ export const updateReview = async (
   }
 };
 
-// TODO: Let only an admin or the owner to execute this
 export const removeReview = async (req: RequestWithSession<any, { id: string }>, res: Response, next: NextFunction) => {
   try {
     const currentReview = await findPopulatedReview(req.params.id);
+    validateCurrentUserOrAdmin(req.session.user, currentReview);
     validateRestaurantReviewsNotBlocked(currentReview.restaurant as Restaurant);
     const removedReview = await removeReviewById(req.params.id);
     if (removedReview === null) {
