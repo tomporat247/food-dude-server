@@ -837,14 +837,7 @@
           "tags": ["Reviews"],
           "parameters": [
             {
-              "name": "restaurantId",
-              "in": "query",
-              "schema": {
-                "type": "string"
-              }
-            },
-            {
-              "name": "userId",
+              "name": "restaurantName",
               "in": "query",
               "schema": {
                 "type": "string"

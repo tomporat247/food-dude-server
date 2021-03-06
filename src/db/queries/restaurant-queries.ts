@@ -49,6 +49,11 @@ export const removeRestaurantById = async (id: string) => {
 
 export const findRestaurantsByCategory = (category: string) => RestaurantModel.find({ category });
 
+export const findRestaurantsIdsForName = (name: string) =>
+  RestaurantModel.find({ name: getCaseInsensitiveContainsFieldFilterQuery(name) })
+    .select('_id')
+    .then(docs => docs.map(doc => doc._id.toString()));
+
 export const findRestaurantsForSearch = (properties: RestaurantSearchProperties & { address?: Address }) => {
   const filterQuery: FilterQuery<RestaurantDocument> = {
     name: getCaseInsensitiveContainsFieldFilterQuery(properties.name),

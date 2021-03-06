@@ -1,13 +1,19 @@
 import { isNil, omitBy } from 'lodash';
 import { ReviewModel } from '../schemas/review-schema';
 import { Review } from '../../models/review';
-import { addReviewToRestaurant, removeReviewFromRestaurant } from './restaurant-queries';
+import { addReviewToRestaurant, findRestaurantsIdsForName, removeReviewFromRestaurant } from './restaurant-queries';
 
-export const findReviews = ({ restaurantName }: { restaurantName?: string }) => {
-  // const relevantRestaurantIds: string[] | undefined = undefined;
-  // const filters = omitBy({ restaurant: restaurantId }, isNil);
-  // return ReviewModel.find(filters).populate('user');
-  return ReviewModel.find().populate('user')
+export const findReviews = async ({ restaurantName }: { restaurantName?: string }) => {
+  const relevantRestaurantIds: string[] = [];
+  if (restaurantName) {
+    relevantRestaurantIds.push(...(await findRestaurantsIdsForName(restaurantName)));
+  }
+
+  const filters = omitBy(
+    { restaurant: relevantRestaurantIds.length > 0 ? { $in: relevantRestaurantIds } : undefined },
+    isNil
+  );
+  return ReviewModel.find(filters).populate('user');
 };
 
 export const findPopulatedReview = (reviewId: string) =>
