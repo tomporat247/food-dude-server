@@ -3,12 +3,13 @@ import { ReviewModel } from '../schemas/review-schema';
 import { Review } from '../../models/review';
 import { addReviewToRestaurant, removeReviewFromRestaurant } from './restaurant-queries';
 
-export const findReviews = ({ restaurantId, userId }: { restaurantId: string; userId: string }) => {
+export const findReviews = ({ restaurantId, userId }: { restaurantId?: string; userId?: string }) => {
   const filters = omitBy({ restaurant: restaurantId, user: userId }, isNil);
   return ReviewModel.find(filters).populate('user');
 };
 
-export const findPopulatedReview = (reviewId: string) => ReviewModel.findById(reviewId).populate('user').populate( 'restaurant')
+export const findPopulatedReview = (reviewId: string) =>
+  ReviewModel.findById(reviewId).populate('user').populate('restaurant');
 
 export const createReview = async (review: Review) => {
   // TODO: Use transaction with session
@@ -31,3 +32,8 @@ export const removeReviewById = async (id: string) => {
 
 export const deleteAllRestaurantReviews = (restaurantId: string) =>
   ReviewModel.deleteMany({ restaurant: restaurantId });
+
+export const getUserIdsWithReviews = (): Promise<string[]> =>
+  ReviewModel.find()
+    .select('_id')
+    .then(userDocuments => userDocuments.map(userDocument => userDocument._id.toString()));

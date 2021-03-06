@@ -4,6 +4,7 @@ import { FilterQuery } from 'mongoose';
 import { isNil, omitBy } from 'lodash';
 import { getCaseInsensitiveContainsFieldFilterQuery } from './utils/common-query-utils';
 import { Address } from '../../types/address';
+import { getUserIdsWithReviews } from './review-queries';
 
 export const doesUserExist = (id: string) => UserModel.exists({ _id: id });
 
@@ -19,12 +20,18 @@ export const findUserById = (id: string) => UserModel.findById(id);
 export const findAndUpdateUser = (id: string, update: Partial<User>) =>
   UserModel.findByIdAndUpdate(id, { $set: update }, { new: true });
 
-export const findUsersForSearch = (
+export const findUsersForSearch = async (
   properties: UserSearchProperties & { address?: Address },
   connectedUserIds?: string[]
 ) => {
+  const relevantUserIds: string[] = connectedUserIds ? [...connectedUserIds] : [];
+  if (properties.contributor) {
+    const contributorUserIds = await getUserIdsWithReviews();
+    relevantUserIds.push(...contributorUserIds);
+  }
+
   const filterQuery: FilterQuery<UserDocument> = {
-    _id: properties.currentlyLoggedIn ? { $in: connectedUserIds } : undefined,
+    _id: properties.currentlyLoggedIn || properties.contributor ? { $in: relevantUserIds } : undefined,
     firstName: getCaseInsensitiveContainsFieldFilterQuery(properties.firstName),
     lastName: getCaseInsensitiveContainsFieldFilterQuery(properties.lastName),
     email: getCaseInsensitiveContainsFieldFilterQuery(properties.email),
