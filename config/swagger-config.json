@@ -501,7 +501,7 @@
           }
         }
       },
-      "/categories/statistics/category-to-restaurant-share": {
+      "/categories/statistics/category-restaurant-share": {
         "get": {
           "tags": ["Categories"],
           "produces": ["application/json"],
@@ -509,17 +509,21 @@
             "200": {
               "description": "statistics",
               "schema": {
-                "type": "object",
-                "properties": {
-                  "restaurantId": {
-                    "type": "object",
-                    "properties": {
-                      "percentage": {
-                        "type": "number"
-                      },
-                      "amount": {
-                        "type": "number"
-                      }
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "percentage": {
+                      "type": "number"
+                    },
+                    "amount": {
+                      "type": "number"
                     }
                   }
                 }
@@ -531,7 +535,7 @@
           }
         }
       },
-      "/categories/statistics/category-to-average-rating": {
+      "/categories/statistics/category-average-rating": {
         "get": {
           "tags": ["Categories"],
           "produces": ["application/json"],
@@ -539,10 +543,19 @@
             "200": {
               "description": "statistics",
               "schema": {
-                "type": "object",
-                "properties": {
-                  "categoryId": {
-                    "type": "number"
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "averageRating": {
+                      "type": "number"
+                    }
                   }
                 }
               }

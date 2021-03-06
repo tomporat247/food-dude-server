@@ -8,8 +8,8 @@ import {
 import {
   createNewCategory,
   getCategories,
-  getCategoryToAverageRating,
-  getCategoryToRestaurantShare,
+  getCategoryAverageRating,
+  getCategoryRestaurantShare,
   removeCategory,
   searchCategories,
   updateCategory
@@ -35,6 +35,6 @@ categoryRouter.delete('/:id', isAdminMiddleWare, getParameterObjectIdValidator('
 //@ts-ignore
 categoryRouter.get('/search', validateCategorySearchQueryParams, searchCategories);
 //@ts-ignore
-categoryRouter.get('/statistics/category-to-restaurant-share', isAdminMiddleWare, getCategoryToRestaurantShare);
+categoryRouter.get('/statistics/category-restaurant-share', isAdminMiddleWare, getCategoryRestaurantShare);
 //@ts-ignore
-categoryRouter.get('/statistics/category-to-average-rating', isAdminMiddleWare, getCategoryToAverageRating);
+categoryRouter.get('/statistics/category-average-rating', isAdminMiddleWare, getCategoryAverageRating);

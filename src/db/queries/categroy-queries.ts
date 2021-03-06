@@ -9,6 +9,8 @@ export const findAllCategories = () => CategoryModel.find();
 
 export const findCategoryById = (id: string) => CategoryModel.findById(id);
 
+export const findCategoriesByIds = (ids: string[]) => CategoryModel.find({ _id: { $in: ids } });
+
 export const findCategoryByName = (name: string) => CategoryModel.findOne({ name });
 
 export const createCategory = (category: Category) => CategoryModel.create(category);

@@ -3,6 +3,7 @@ import { NextFunction, Response } from 'express';
 import {
   createCategory,
   findAllCategories,
+  findCategoriesByIds,
   findCategoriesForSearch,
   findCategoryByName,
   getCategoryToRestaurantAmount,
@@ -99,27 +100,73 @@ export const searchCategories = async (
   }
 };
 
-const getStatisticAnalysisFromCategoryToRestaurantAmount = (categoryToRestaurantAmount: Record<string, number>) => {
-  const totalRestaurants = Object.values(categoryToRestaurantAmount).reduce((acc, curr) => acc + curr, 0);
-  return Object.entries(categoryToRestaurantAmount).reduce((acc, [id, amount]) => {
-    acc[id] = { amount, percentage: amount / totalRestaurants };
+const getStatisticAnalysisFromCategoryToRestaurantAmount = (
+  categoryToRestaurantAmount: Record<string, { name: string; restaurantAmount: number }>
+): Array<{ id: string; name: string; percentage: number; amount: number }> => {
+  const totalRestaurants = Object.values(categoryToRestaurantAmount).reduce(
+    (acc, curr) => acc + curr.restaurantAmount,
+    0
+  );
+
+  const idToPercentageAndAmount = Object.entries(categoryToRestaurantAmount).reduce(
+    (acc, [id, { name, restaurantAmount }]) => {
+      acc[id] = { name, amount: restaurantAmount, percentage: restaurantAmount / totalRestaurants };
+      return acc;
+    },
+    {} as Record<string, { percentage: number; amount: number; name: string }>
+  );
+
+  return Object.entries(idToPercentageAndAmount).reduce((acc, [id, value]) => {
+    acc.push({ ...value, id });
     return acc;
-  }, {} as Record<string, { percentage: number; amount: number }>);
+  }, [] as Array<{ id: string; name: string; percentage: number; amount: number }>);
 };
 
-export const getCategoryToRestaurantShare = async (req: Request, res: Response, next: NextFunction) => {
+export const getCategoryRestaurantShare = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const categoryToRestaurantAmount = await getCategoryToRestaurantAmount();
-    res.send(getStatisticAnalysisFromCategoryToRestaurantAmount(categoryToRestaurantAmount));
+    const categoryIdsAndNames = await findCategoriesByIds(Object.keys(categoryToRestaurantAmount)).select([
+      '_id',
+      'name'
+    ]);
+
+    const categoryToName = categoryIdsAndNames.reduce((acc, category) => {
+      acc[category._id.toString()] = category.name;
+      return acc;
+    }, {} as Record<string, string>);
+
+    const categoryToRestaurantAmountAndName: Record<string, { name: string; restaurantAmount: number }> = Object.keys(
+      categoryToName
+    ).reduce((acc, categoryId) => {
+      acc[categoryId] = { name: categoryToName[categoryId], restaurantAmount: categoryToRestaurantAmount[categoryId] };
+      return acc;
+    }, {} as Record<string, { name: string; restaurantAmount: number }>);
+    res.send(getStatisticAnalysisFromCategoryToRestaurantAmount(categoryToRestaurantAmountAndName));
   } catch (e) {
     next(e);
   }
 };
 
-export const getCategoryToAverageRating = async (req: Request, res: Response, next: NextFunction) => {
+export const getCategoryAverageRating = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const categoryToAverageRating = await getCategoryToAverageRestaurantRating();
-    res.send(categoryToAverageRating);
+    const categoryIdsAndNames = await findCategoriesByIds(Object.keys(categoryToAverageRating)).select(['_id', 'name']);
+
+    const categoryToName = categoryIdsAndNames.reduce((acc, category) => {
+      acc[category._id.toString()] = category.name;
+      return acc;
+    }, {} as Record<string, string>);
+    const categoryWithAverageRatingAndName: Array<{ id: string; name: string; averageRating: number }> = Object.keys(
+      categoryToAverageRating
+    ).reduce((acc, categoryId) => {
+      acc.push({
+        id: categoryId,
+        name: categoryToName[categoryId],
+        averageRating: categoryToAverageRating[categoryId]
+      });
+      return acc;
+    }, [] as Array<{ id: string; name: string; averageRating: number }>);
+    res.send(categoryWithAverageRatingAndName);
   } catch (e) {
     next(e);
   }
