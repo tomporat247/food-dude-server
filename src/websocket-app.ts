@@ -104,6 +104,8 @@ export const setupWebsocketServer = (server: http.Server) => {
           onBlockRestaurantReviewsChange(socket, user, restaurantId, block)
       );
 
+      socket.emit('lilach', { a: 'b' });
+
       socket.on('disconnect', () => onUserDisconnected(socket));
     } catch (e) {
       onAuthError(socket, token);
